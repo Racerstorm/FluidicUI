@@ -1,0 +1,2 @@
+java -Dwebdriver.chrome.driver="C:\Users\Chitrangadans\Downloads\chromedriver.exe" -jar C:\Users\Chitrangadans\Downloads\selenium-server-standalone-3.14.0.jar -role webdriver -hub http://localhost:4444/grid/register -port 5566 -browser browserName=chrome,maxInstance=3
+pause
