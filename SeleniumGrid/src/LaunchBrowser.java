@@ -19,20 +19,23 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+import readCSV.ReadCSV;
  
 public class LaunchBrowser {
 	public static WebDriver driver;
+	public static String Action="";
 	public static String Target="";
-	public static String locatorValue="";
-	public static String locatorType="";
-	public static String inputValue = "";
-	public static String locator = "";
+	public static String TargetValue="";
+	public static String TargetType="";
+	public static String Value = "";
 	public static WebElement element = null;
 	public static By by = null;
 	public static JavascriptExecutor jse = (JavascriptExecutor)driver;
@@ -42,7 +45,19 @@ public class LaunchBrowser {
  
  		/*String URL = "http://www.google.com";
  		String Node = "http://localhost:4444/wd/hub";*/
-		String url = "https://www.google.com/";
+		try
+		{
+			  ReadCSV.readfromCSV();
+	    }
+		
+		catch (FileNotFoundException e) 
+		    {
+		 e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
 		String chromedriverpath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
 		DesiredCapabilities capability=DesiredCapabilities.chrome();
 		System.setProperty("webdriver.chrome.driver", chromedriverpath);
@@ -51,130 +66,213 @@ public class LaunchBrowser {
 		options.addArguments("disable-infobars");
         driver = new ChromeDriver(options);
  		
-        //driver.navigate().to("https://development-webstore-unilever.demandware.net/s/UNI-T2-NA/Home");
-        driver.navigate().to("https://development-webstore-unilever.demandware.net/s/UNI-T2-NA/en/us/account");
+         /*
+        driver.navigate().to("https://www.t2tea.com/en/us/Home");
+        Target = "//a[@class='user-login']";
+        Click();
+        Target="id=dwfrm_login_username";
+        Value="prasad.mani@unilever.com";
+        Type();
+        Target="id=dwfrm_login_password";
+        Value="Prasadman1";
+        Type();
+        Target="//button[@class='button btn'][@value='Login']";
+        Click();
+        */
+        for(int i = 0;i<ReadCSV.actions.size();i++)
+        {
+            Action = ReadCSV.actions.get(i);
+        	Target = ReadCSV.target.get(i);
+        	Value = ReadCSV.value.get(i);
+        
+        	gotoAction();
+        
+        	
+       // driver.navigate().to("https://www.sheamoisture.com/");
+       // Target = "//i[contains(text(),'Maybe Later')]";
+     //   Thread.sleep(10000);
+     //   driver.switchTo().frame("ju_iframe_242603");
+     ////   Thread.sleep(2000);
+      //  Target = "//span/i";
+     //   waitforElement();
+        //javascriptClick();
+     //   Click();
+       /* Target = "//a/span[contains(text(),'Bath & Body')]";
+        Click();
+        Target = "//span[@class='action primary quickview-button']";
+        Click();
+        driver.navigate().to("https://www.nubianheritage.com/");
         waitForJStoLoad();
-        //Thread.sleep(10000);
-        locator = "//a[contains(text(),'Full Price')]";
-        waitforElement();
-        javascriptClick();
-        //Click();
-
+        Target = "//a[@class='nubian-menu']";
+        Click();
+        Target = "//span[contains(text(),'Deodorants')]";
+        Click();
+        Target = "//a[@class='view-product']";
+        Click();*/
+        
+        
         //Thread.sleep(4000);
-      //  locator = "//a[contains(text(),'Full Price')]";
+      //  Target = "//a[contains(text(),'Full Price')]";
        // checkAlert();
         //waitforElement();
        // Click();
         //Thread.sleep(10000);
        /* waitForPageLoad();
-        locator = "//img[contains(@id,\"popup-subcription\")]";
+        Target = "//img[contains(@id,\"popup-subcription\")]";
         waitforElement();
         Thread.sleep(20000);
         javascriptClick();
-        locator = "//a[@class='user-login']";
+        Target = "//a[@class='user-login']";
         Click();*/
-        locator="id=dwfrm_login_username";
-        inputValue="prasad.mani@unilever.com";
+     /*   Target="id=dwfrm_login_username";
+        Value="prasad.mani@unilever.com";
         Type();
-        locator="id=dwfrm_login_password";
-        inputValue="Prasadman1";
+        Target="id=dwfrm_login_password";
+        Value="Prasadman1";
         Type();
-        locator="//button[@class='button btn'][@value='Login']";
+        Target="//button[@class='button btn'][@value='Login']";
         Click();
         checkAlert();
-        locator = "//a[@class='level-1 subcat'][contains(text(),'Teawares')]|//ul[@class='column col-1']/li//a[contains(text(),'Tea For One')]";
+        Target = "//a[@class='level-1 subcat'][contains(text(),'Teawares')]|//ul[@class='column col-1']/li//a[contains(text(),'Tea For One')]";
         mouseOver();
-        locator = "//a[contains(text(),'Full Price')]";
-        Click();
+        Target = "//a[contains(text(),'Full Price')]";
+        Click(); */
+        }
+        		
         TakeSreenshot();
         Thread.sleep(3000);
  		driver.quit();
  	}	
 	
+public static void gotoAction() 
+{
+	
+	try {
+		//Implement Action method invoke using reflection- TBD_P2
+		
+		switch(Action.toUpperCase()) 
+		{
+			case "OPEN": Open();
+				break;
+			
+			case "CLICK": Click();
+				break;
+				
+			case "JAVASCRIPTCLICK" : javascriptClick();
+				break;
+				
+			case "TYPE" : Type();
+				break;
+				
+			case "WAITFORPAGELOAD" : waitForPageLoad();
+				break;
+				
+			case "WAITFORJSLOAD" : waitForJStoLoad();
+				break;
+				
+			case "WAITFORELEMENT" : waitforElement();
+				break;
+				
+			case "MOUSEOVER" : mouseOver();
+				break;
+				
+			case "CHECKALERT" : checkAlert();
+				break;
+				
+			case "TAKESCREENSHOT" : TakeSreenshot();
+			break;
+				
+		}
+	}
+	catch(Exception e)
+	{
+		System.out.println("Invalid action : The exception is : "+e);
+	}
+}
 	public static void splitTarget(String Target)
 	{	
 		/* To Split and Store the Property type and Property Values from Target */
 		 
           if (Target.toUpperCase().startsWith("ID"))
             {
-                locatorValue = Target.split("=")[1];
+                TargetValue = Target.split("=")[1];
  
-                locatorType = "ID";
+                TargetType = "ID";
  
-                by = By.id(locatorValue);
+                by = By.id(TargetValue);
                 
                 
  
             }
             else if (Target.toUpperCase().startsWith("NAME"))
             {
-                locatorValue = Target.split("=")[1];
+                TargetValue = Target.split("=")[1];
  
-                locatorType = "NAME";
+                TargetType = "NAME";
  
-                by = By.name(locatorValue);
+                by = By.name(TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("CSS"))
             {
-                locatorValue = Target.split("=")[1];
+                TargetValue = Target.split("=")[1];
  
-                locatorType = "CSS";
+                TargetType = "CSS";
  
-                by = By.cssSelector(locatorValue);
+                by = By.cssSelector(TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("CLASS"))
             {
-                locatorValue = Target.split("=")[1];
+                TargetValue = Target.split("=")[1];
  
-                locatorType = "CLASS";
+                TargetType = "CLASS";
  
-                by = By.className(locatorValue);
+                by = By.className(TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("LINK"))
             {
-                locatorValue = Target.split("=")[1];
+                TargetValue = Target.split("=")[1];
  
-                locatorType = "LINK";
+                TargetType = "LINK";
  
-                by = By.linkText(locatorValue);
+                by = By.linkText(TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("XPATH"))
             {
-                locatorValue = Target.split("=")[1];
+                TargetValue = Target.split("=")[1];
  
-                locatorType = "XPATH";
+                TargetType = "XPATH";
  
-                by = By.xpath(locatorValue);
+                by = By.xpath(TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("//"))
             {
-                locatorValue = Target;
+                TargetValue = Target;
  
-                locatorType = "XPATH";
+                TargetType = "XPATH";
  
-                by = By.xpath(locatorValue);
+                by = By.xpath(TargetValue);
  
             }
             else if(Target.toUpperCase().startsWith(".//"))
             {
-                locatorValue = Target;
+                TargetValue = Target;
  
-                locatorType = "XPATH";
+                TargetType = "XPATH";
  
-                by = By.xpath(locatorValue);
+                by = By.xpath(TargetValue);
             }
             else if(Target.toUpperCase().startsWith("(//"))
             {
-                locatorValue = Target;
+                TargetValue = Target;
  
-                locatorType = "XPATH";
+                TargetType = "XPATH";
  
-                by = By.xpath(locatorValue);
+                by = By.xpath(TargetValue);
             }
             else
             {
@@ -182,11 +280,25 @@ public class LaunchBrowser {
             }
 	}
 
+	public static void Open()
+	{
+		try
+		{
+			driver.navigate().to(Value);
+		}
+		
+		catch(Exception e)
+		{
+		  System.out.println("Exception is "+e);
+		}
+		
+	}
+	
 	public static void Click()
 	{
      try
      {   
-    	 splitTarget(locator);
+    	 splitTarget(Target);
     	 waitforElement();
        driver.findElement(by).click();
       
@@ -205,7 +317,7 @@ public class LaunchBrowser {
 	{   
 		try
 		{
-		splitTarget(locator);
+		splitTarget(Target);
 		element=driver.findElement(by);
 		//jse.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", element);
 		((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);
@@ -217,8 +329,8 @@ public class LaunchBrowser {
 	
 	public static void Type()
 	{
-		splitTarget(locator);
-		driver.findElement(by).sendKeys(inputValue);
+		splitTarget(Target);
+		driver.findElement(by).sendKeys(Value);
 	}
 	
 	public static void waitForPageLoad()
@@ -279,8 +391,8 @@ public class LaunchBrowser {
 	
 	public static void waitforElement()
 	{
-		splitTarget(locator);
-		element = driver.findElement(by);
+		splitTarget(Target);
+		
 	try
 	 {
 		WebDriverWait wait = new WebDriverWait(driver, 60);
@@ -312,8 +424,8 @@ public class LaunchBrowser {
 		try
 		{
 			
-		String hoverElement = locator.split("\\|")[0]; 
-		String elementtobeClicked = locator.split("\\|")[1]; 
+		String hoverElement = Target.split("\\|")[0]; 
+		String elementtobeClicked = Target.split("\\|")[1]; 
 		
 		splitTarget(hoverElement);
 		WebElement hover=driver.findElement(by);
