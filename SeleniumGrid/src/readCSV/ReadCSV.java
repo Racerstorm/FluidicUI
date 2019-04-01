@@ -12,18 +12,18 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
-
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+import Storage.StorageVariables;
 
 public class ReadCSV {
 
-	public static ArrayList<String> actions = new ArrayList<String>();
-	public static ArrayList<String> target = new ArrayList<String>();
-	public static ArrayList<String> value = new ArrayList<String>();
 	public static void readfromCSV() throws FileNotFoundException, IOException
 	{
-	String csvLocation="D:\\eclipse-workspace\\Test.csv";
+	  StorageVariables.csvLocation="D:\\eclipse-workspace\\Test.csv";
+	  StorageVariables.delimiter='|';
+	 
+	 //csvLocation="D:\\eclipse-workspace\\Test.csv";
 	//public OutputFormatter output;
 	//List<String[]> actions;
 	  
@@ -32,7 +32,8 @@ public class ReadCSV {
             InputStreamReader isr = new InputStreamReader(fis,StandardCharsets.UTF_8);
             CSVReader reader = new CSVReader(isr)) */
         {
-        	CSVReader reader = new CSVReader(new FileReader(csvLocation),'|');
+        	//CSVReader reader = new CSVReader(new FileReader(StorageVariables.csvLocation),StorageVariables.delimiter);
+        	CSVReader reader = new CSVReader(new FileReader(StorageVariables.csvLocation),StorageVariables.delimiter);
             String[] nextLine;
 
         while ((nextLine = reader.readNext()) != null)
@@ -42,26 +43,26 @@ public class ReadCSV {
             {   
             	if(!e.startsWith("target")&&!e.startsWith("value"))
             	{
-            	actions.add(e);
+            		StorageVariables.actions.add(e);
                 //System.out.format("%s ", e);
             	}
             	
             	else if(e.startsWith("target"))
             	{
             		
-            	    target.add(e.substring(7));
+            		StorageVariables.targets.add(e.substring(7));
             	}
             	
             	else if(e.startsWith("value"))
             	{
             		e.replace("value=", "");
-            		value.add(e.substring(6));
+            		StorageVariables.values.add(e.substring(6));
             	}
             }
         }
-       for (int i=0;i<=actions.size();i++)
+       for (int i=0;i<=StorageVariables.actions.size();i++)
        {
-    	   System.out.println(actions.get(i)+" "+target.get(i)+" "+value.get(i)+"\n");
+    	   System.out.println(StorageVariables.actions.get(i)+" "+StorageVariables.targets.get(i)+" "+StorageVariables.values.get(i)+"\n");
        }
     }
         catch(Exception ex)

@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import Storage.StorageVariables;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -28,18 +29,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import readCSV.ReadCSV;
+import Storage.StorageVariables;
  
 public class LaunchBrowser {
-	public static WebDriver driver;
-	public static String Action="";
-	public static String Target="";
-	public static String TargetValue="";
-	public static String TargetType="";
-	public static String Value = "";
-	public static WebElement element = null;
-	public static By by = null;
-	public static JavascriptExecutor jse = (JavascriptExecutor)driver;
-	
  
 	public static void main(String[]  args) throws MalformedURLException, InterruptedException{
  
@@ -58,90 +50,30 @@ public class LaunchBrowser {
 			e.printStackTrace();
 		}
 	
-		String chromedriverpath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
+		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
+		StorageVariables.screenshotPath="C:\\Users\\Chitrangadans\\Pictures\\Screenshots\\File";
 		DesiredCapabilities capability=DesiredCapabilities.chrome();
-		System.setProperty("webdriver.chrome.driver", chromedriverpath);
+		System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--start-maximized");
 		options.addArguments("disable-infobars");
-        driver = new ChromeDriver(options);
+		StorageVariables.driver = new ChromeDriver(options);
  		
-         /*
-        driver.navigate().to("https://www.t2tea.com/en/us/Home");
-        Target = "//a[@class='user-login']";
-        Click();
-        Target="id=dwfrm_login_username";
-        Value="prasad.mani@unilever.com";
-        Type();
-        Target="id=dwfrm_login_password";
-        Value="Prasadman1";
-        Type();
-        Target="//button[@class='button btn'][@value='Login']";
-        Click();
-        */
-        for(int i = 0;i<ReadCSV.actions.size();i++)
+        
+        for(int i = 0;i<StorageVariables.actions.size();i++)
         {
-            Action = ReadCSV.actions.get(i);
-        	Target = ReadCSV.target.get(i);
-        	Value = ReadCSV.value.get(i);
+        	StorageVariables.Action = StorageVariables.actions.get(i);
+        	StorageVariables.Target = StorageVariables.targets.get(i);
+        	StorageVariables.Value = StorageVariables.values.get(i);
         
         	gotoAction();
         
-        	
-       // driver.navigate().to("https://www.sheamoisture.com/");
-       // Target = "//i[contains(text(),'Maybe Later')]";
-     //   Thread.sleep(10000);
-     //   driver.switchTo().frame("ju_iframe_242603");
-     ////   Thread.sleep(2000);
-      //  Target = "//span/i";
-     //   waitforElement();
-        //javascriptClick();
-     //   Click();
-       /* Target = "//a/span[contains(text(),'Bath & Body')]";
-        Click();
-        Target = "//span[@class='action primary quickview-button']";
-        Click();
-        driver.navigate().to("https://www.nubianheritage.com/");
-        waitForJStoLoad();
-        Target = "//a[@class='nubian-menu']";
-        Click();
-        Target = "//span[contains(text(),'Deodorants')]";
-        Click();
-        Target = "//a[@class='view-product']";
-        Click();*/
-        
-        
-        //Thread.sleep(4000);
-      //  Target = "//a[contains(text(),'Full Price')]";
-       // checkAlert();
-        //waitforElement();
-       // Click();
-        //Thread.sleep(10000);
-       /* waitForPageLoad();
-        Target = "//img[contains(@id,\"popup-subcription\")]";
-        waitforElement();
-        Thread.sleep(20000);
-        javascriptClick();
-        Target = "//a[@class='user-login']";
-        Click();*/
-     /*   Target="id=dwfrm_login_username";
-        Value="prasad.mani@unilever.com";
-        Type();
-        Target="id=dwfrm_login_password";
-        Value="Prasadman1";
-        Type();
-        Target="//button[@class='button btn'][@value='Login']";
-        Click();
-        checkAlert();
-        Target = "//a[@class='level-1 subcat'][contains(text(),'Teawares')]|//ul[@class='column col-1']/li//a[contains(text(),'Tea For One')]";
-        mouseOver();
-        Target = "//a[contains(text(),'Full Price')]";
-        Click(); */
+     
         }
         		
         TakeSreenshot();
         Thread.sleep(3000);
- 		driver.quit();
+        StorageVariables.driver.quit();
  	}	
 	
 public static void gotoAction() 
@@ -150,7 +82,7 @@ public static void gotoAction()
 	try {
 		//Implement Action method invoke using reflection- TBD_P2
 		
-		switch(Action.toUpperCase()) 
+		switch(StorageVariables.Action.toUpperCase()) 
 		{
 			case "OPEN": Open();
 				break;
@@ -195,84 +127,84 @@ public static void gotoAction()
 		 
           if (Target.toUpperCase().startsWith("ID"))
             {
-                TargetValue = Target.split("=")[1];
+        	  StorageVariables.TargetValue = Target.split("=")[1];
  
-                TargetType = "ID";
+        	  StorageVariables.TargetType = "ID";
  
-                by = By.id(TargetValue);
+        	  StorageVariables.by = By.id(StorageVariables.TargetValue);
                 
                 
  
             }
             else if (Target.toUpperCase().startsWith("NAME"))
             {
-                TargetValue = Target.split("=")[1];
+            	StorageVariables.TargetValue = Target.split("=")[1];
  
-                TargetType = "NAME";
+            	StorageVariables.TargetType = "NAME";
  
-                by = By.name(TargetValue);
+            	StorageVariables.by = By.name(StorageVariables.TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("CSS"))
             {
-                TargetValue = Target.split("=")[1];
+            	StorageVariables.TargetValue = Target.split("=")[1];
  
-                TargetType = "CSS";
+            	StorageVariables.TargetType = "CSS";
  
-                by = By.cssSelector(TargetValue);
+            	StorageVariables.by = By.cssSelector(StorageVariables.TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("CLASS"))
             {
-                TargetValue = Target.split("=")[1];
+            	StorageVariables.TargetValue = Target.split("=")[1];
  
-                TargetType = "CLASS";
+            	StorageVariables.TargetType = "CLASS";
  
-                by = By.className(TargetValue);
+            	StorageVariables.by = By.className(StorageVariables.TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("LINK"))
             {
-                TargetValue = Target.split("=")[1];
+            	StorageVariables.TargetValue = Target.split("=")[1];
  
-                TargetType = "LINK";
+            	StorageVariables.TargetType = "LINK";
  
-                by = By.linkText(TargetValue);
+            	StorageVariables.by = By.linkText(StorageVariables.TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("XPATH"))
             {
-                TargetValue = Target.split("=")[1];
+            	StorageVariables.TargetValue = Target.split("=")[1];
  
-                TargetType = "XPATH";
+            	StorageVariables.TargetType = "XPATH";
  
-                by = By.xpath(TargetValue);
+            	StorageVariables.by = By.xpath(StorageVariables.TargetValue);
  
             }
             else if (Target.toUpperCase().startsWith("//"))
             {
-                TargetValue = Target;
+            	StorageVariables.TargetValue = Target;
  
-                TargetType = "XPATH";
+            	StorageVariables.TargetType = "XPATH";
  
-                by = By.xpath(TargetValue);
+            	StorageVariables.by = By.xpath(StorageVariables.TargetValue);
  
             }
             else if(Target.toUpperCase().startsWith(".//"))
             {
-                TargetValue = Target;
+            	StorageVariables.TargetValue = Target;
  
-                TargetType = "XPATH";
+            	StorageVariables.TargetType = "XPATH";
  
-                by = By.xpath(TargetValue);
+            	StorageVariables.by = By.xpath(StorageVariables.TargetValue);
             }
             else if(Target.toUpperCase().startsWith("(//"))
             {
-                TargetValue = Target;
+            	StorageVariables.TargetValue = Target;
  
-                TargetType = "XPATH";
+            	StorageVariables.TargetType = "XPATH";
  
-                by = By.xpath(TargetValue);
+            	StorageVariables.by = By.xpath(StorageVariables.TargetValue);
             }
             else
             {
@@ -284,7 +216,7 @@ public static void gotoAction()
 	{
 		try
 		{
-			driver.navigate().to(Value);
+			StorageVariables.driver.navigate().to(StorageVariables.Value);
 		}
 		
 		catch(Exception e)
@@ -298,9 +230,9 @@ public static void gotoAction()
 	{
      try
      {   
-    	 splitTarget(Target);
+    	 splitTarget(StorageVariables.Target);
     	 waitforElement();
-       driver.findElement(by).click();
+    	 StorageVariables.driver.findElement(StorageVariables.by).click();
       
      
      }
@@ -317,10 +249,10 @@ public static void gotoAction()
 	{   
 		try
 		{
-		splitTarget(Target);
-		element=driver.findElement(by);
+		splitTarget(StorageVariables.Target);
+		StorageVariables.element=StorageVariables.driver.findElement(StorageVariables.by);
 		//jse.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", element);
-		((JavascriptExecutor)driver).executeScript("arguments[0].click();", element);
+		((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
 		//jse.executeScript("arguments[0].click();", element);
 		}
 		catch(Exception ex)
@@ -329,15 +261,15 @@ public static void gotoAction()
 	
 	public static void Type()
 	{
-		splitTarget(Target);
-		driver.findElement(by).sendKeys(Value);
+		splitTarget(StorageVariables.Target);
+		StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
 	}
 	
 	public static void waitForPageLoad()
 	{
 		try
 		{
-			String pageLoadState = ((JavascriptExecutor)driver).executeScript("if (document != undefined && document.readyState) { return document.readyState;} else { return undefined;}").toString();
+			String pageLoadState = ((JavascriptExecutor)StorageVariables.driver).executeScript("if (document != undefined && document.readyState) { return document.readyState;} else { return undefined;}").toString();
 
 			while(true)
 			{
@@ -348,7 +280,7 @@ public static void gotoAction()
 
 					break;
 				}
-				pageLoadState = ((JavascriptExecutor)driver).executeScript("if (document != undefined && document.readyState) { return document.readyState;} else { return undefined;}").toString();
+				pageLoadState = ((JavascriptExecutor)StorageVariables.driver).executeScript("if (document != undefined && document.readyState) { return document.readyState;} else { return undefined;}").toString();
 
 			}
 		}
@@ -361,7 +293,7 @@ public static void gotoAction()
 	
 	public static boolean waitForJStoLoad() {
 
-	    WebDriverWait wait = new WebDriverWait(driver, 30);
+	    WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 30);
 
 	    // wait for jQuery to load
 	    ExpectedCondition<Boolean> jQueryLoad = new ExpectedCondition<Boolean>() {
@@ -391,12 +323,12 @@ public static void gotoAction()
 	
 	public static void waitforElement()
 	{
-		splitTarget(Target);
+		splitTarget(StorageVariables.Target);
 		
 	try
 	 {
-		WebDriverWait wait = new WebDriverWait(driver, 60);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(by));
+		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 60);
+		wait.until(ExpectedConditions.visibilityOfElementLocated(StorageVariables.by));
 		//element= wait.until(ExpectedConditions.elementToBeClickable(element));
 		
 		}
@@ -409,9 +341,9 @@ public static void gotoAction()
 		 
 		try
 		{
-		File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		File scrFile = ((TakesScreenshot)StorageVariables.driver).getScreenshotAs(OutputType.FILE);
 		DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); // add S if you need milliseconds
-		FileUtils.copyFile(scrFile, new File("C:\\Users\\Chitrangadans\\Pictures\\Screenshots\\File"+ df.format(new Date()) + ".png"));
+		FileUtils.copyFile(scrFile, new File(StorageVariables.screenshotPath+ df.format(new Date()) + ".png"));
 		}
 		
 		catch(Exception exc)
@@ -424,16 +356,16 @@ public static void gotoAction()
 		try
 		{
 			
-		String hoverElement = Target.split("\\|")[0]; 
-		String elementtobeClicked = Target.split("\\|")[1]; 
+		String hoverElement = StorageVariables.Target.split("\\|")[0]; 
+		String elementtobeClicked = StorageVariables.Target.split("\\|")[1]; 
 		
 		splitTarget(hoverElement);
-		WebElement hover=driver.findElement(by);
+		WebElement hover=StorageVariables.driver.findElement(StorageVariables.by);
 		
 		splitTarget(elementtobeClicked);
-		WebElement clickElement = driver.findElement(by); 
+		WebElement clickElement = StorageVariables.driver.findElement(StorageVariables.by); 
 		
-		Actions actions = new Actions(driver);
+		Actions actions = new Actions(StorageVariables.driver);
 		
 		//WebElement menu = driver.findElement(by); 
 		
@@ -452,9 +384,9 @@ public static void gotoAction()
 
 	public static void checkAlert() {
 	    try {;
-	        WebDriverWait wait = new WebDriverWait(driver, 2);
-	        wait.until(ExpectedConditions.elementToBeClickable(by));
-	        Alert alert = driver.switchTo().alert();
+	        WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 2);
+	        wait.until(ExpectedConditions.elementToBeClickable(StorageVariables.by));
+	        Alert alert = StorageVariables.driver.switchTo().alert();
 	        alert.dismiss();
 	    } catch (Exception e) {
 	        //exception handling
