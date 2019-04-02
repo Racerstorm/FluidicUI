@@ -16,9 +16,6 @@ import org.openqa.selenium.remote.server.handler.ExecuteScript;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-
-import Storage.StorageVariables;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -52,12 +49,12 @@ public class LaunchBrowser {
 	
 		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
 		StorageVariables.screenshotPath="C:\\Users\\Chitrangadans\\Pictures\\Screenshots\\File";
-		DesiredCapabilities capability=DesiredCapabilities.chrome();
+	//	DesiredCapabilities capability=DesiredCapabilities.chrome();
 		System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--start-maximized");
 		options.addArguments("disable-infobars");
-		StorageVariables.driver = new ChromeDriver(options);
+;		StorageVariables.driver = new ChromeDriver(options);
  		
         
         for(int i = 0;i<StorageVariables.actions.size();i++)
@@ -65,8 +62,9 @@ public class LaunchBrowser {
         	StorageVariables.Action = StorageVariables.actions.get(i);
         	StorageVariables.Target = StorageVariables.targets.get(i);
         	StorageVariables.Value = StorageVariables.values.get(i);
-        
+            System.out.println("Executing Step : "+i);
         	gotoAction();
+        	System.out.println("Completed Step : "+i+": "+StorageVariables.Action+"");
         
      
         }
@@ -80,7 +78,7 @@ public static void gotoAction()
 {
 	
 	try {
-		//Implement Action method invoke using reflection- TBD_P2
+		
 		
 		switch(StorageVariables.Action.toUpperCase()) 
 		{
@@ -91,6 +89,9 @@ public static void gotoAction()
 				break;
 				
 			case "JAVASCRIPTCLICK" : javascriptClick();
+				break;
+				
+			case "CLICKIFPRESENT" : clickifPresent();
 				break;
 				
 			case "TYPE" : Type();
@@ -105,7 +106,7 @@ public static void gotoAction()
 			case "WAITFORELEMENT" : waitforElement();
 				break;
 				
-			case "MOUSEOVER" : mouseOver();
+			case "MOUSEOVERANDCLICK" : mouseOverandClick();
 				break;
 				
 			case "CHECKALERT" : checkAlert();
@@ -217,6 +218,7 @@ public static void gotoAction()
 		try
 		{
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
+			System.out.println("Open action was performed successfully.");
 		}
 		
 		catch(Exception e)
@@ -233,17 +235,68 @@ public static void gotoAction()
     	 splitTarget(StorageVariables.Target);
     	 waitforElement();
     	 StorageVariables.driver.findElement(StorageVariables.by).click();
-      
-     
+    	 System.out.println("Click action was performed successfully.");
      }
-     
+          
      catch(Exception e)
      {
-       
-    	
-    	// (JavascriptExecutor)driver).executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", Storage.webElement);
+    	// (JavascriptExecutor)driver).executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", StorageVariables.by);
+    	 System.out.println("Click action was not performed.");
      }
+    	 
+     
      }
+     
+     public static void clickifPresent()
+     {
+    	 try
+    	 {
+    		 splitTarget(StorageVariables.Target);
+    		 if(isElementPresent())
+    		 {
+    			 StorageVariables.driver.findElement(StorageVariables.by).click();
+    			 System.out.println("Element was present on the page and click action was performed.");
+    		 }
+    		 
+    		 else
+    		 {
+    		    System.out.println("Element cannot be clicked as the element isn't present on the page. ");
+    		 }
+    		 
+    	 }
+    		 
+    	 
+    	 
+    	 catch(Exception e)
+    	 {
+    	 }
+    	 
+    	 
+     }
+     
+     public static boolean isElementPresent()
+     {
+    	 boolean elementPresence = false;
+    	 
+    	 try
+    	 {
+    	   StorageVariables.driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
+    	   StorageVariables.driver.findElement(StorageVariables.by);
+    	   elementPresence=true;
+    	   System.out.println("Element is present on the page.");
+    	 }
+    
+    	  catch(Exception e)
+    	  {
+    		elementPresence=false;  
+    		System.out.println("Element is not present\n");
+    	  }
+    	  
+    	  StorageVariables.driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+    	  return elementPresence;
+     
+     }
+     
 	
 	public static void javascriptClick()
 	{   
@@ -261,8 +314,16 @@ public static void gotoAction()
 	
 	public static void Type()
 	{
+		try
+		{
 		splitTarget(StorageVariables.Target);
+		StorageVariables.driver.findElement(StorageVariables.by).clear();
 		StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
+		}
+		catch(Exception e)
+		{
+			System.out.println("Unable to type. Exception caught :"+e);
+		}
 	}
 	
 	public static void waitForPageLoad()
@@ -327,7 +388,7 @@ public static void gotoAction()
 		
 	try
 	 {
-		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 60);
+		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(StorageVariables.by));
 		//element= wait.until(ExpectedConditions.elementToBeClickable(element));
 		
@@ -351,13 +412,13 @@ public static void gotoAction()
 		
 	}
 	
-	public static void mouseOver()
+	public static void mouseOverandClick()
 	{
 		try
 		{
 			
-		String hoverElement = StorageVariables.Target.split("\\|")[0]; 
-		String elementtobeClicked = StorageVariables.Target.split("\\|")[1]; 
+		String hoverElement = StorageVariables.Target.split("\\#")[0]; 
+		String elementtobeClicked = StorageVariables.Target.split("\\#")[1]; 
 		
 		splitTarget(hoverElement);
 		WebElement hover=StorageVariables.driver.findElement(StorageVariables.by);
@@ -372,7 +433,7 @@ public static void gotoAction()
 		actions.moveToElement(hover).build().perform();
 		//Thread.sleep(2000);
 		actions.moveToElement(clickElement).click().build().perform();
-		System.out.println("Done.");
+		System.out.println("Hovered on the element and performed the click action successfully.");
 		
 		}
 		catch(Exception m)

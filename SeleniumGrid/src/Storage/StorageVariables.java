@@ -27,6 +27,7 @@ public class StorageVariables {
 	
 	public static WebElement element = null;
 	public static By by = null;
+	public static String tempStorage="";
 	public static String screenshotPath="";
 	
 

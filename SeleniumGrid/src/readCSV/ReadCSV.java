@@ -60,10 +60,10 @@ public class ReadCSV {
             	}
             }
         }
-       for (int i=0;i<=StorageVariables.actions.size();i++)
+    /*   for (int i=0;i<=StorageVariables.actions.size();i++)
        {
     	   System.out.println(StorageVariables.actions.get(i)+" "+StorageVariables.targets.get(i)+" "+StorageVariables.values.get(i)+"\n");
-       }
+       }*/
     }
         catch(Exception ex)
         {
