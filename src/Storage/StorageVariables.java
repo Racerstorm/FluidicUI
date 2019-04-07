@@ -11,8 +11,7 @@ public class StorageVariables {
 
 	public static WebDriver driver;
 	public static String driverPath= "";
-	public static JavascriptExecutor jse = (JavascriptExecutor)driver;
-	
+	public static JavascriptExecutor jse;
 	public static String Action="";
 	public static String Target="";
 	public static String TargetValue="";
@@ -24,12 +23,16 @@ public class StorageVariables {
 	public static ArrayList<String> values = new ArrayList<String>();
 	public static String csvLocation = "";
 	public static char delimiter;
+	public static WebElement highlightedElement=null;
 	
 	public static WebElement element = null;
 	public static By by = null;
 	public static String tempStorage="";
 	public static String screenshotPath="";
-	public static String Stc ="";
+	
+	//Variables for Runtime Step information using Growl.js
+	public static String messageType="";
+	public static String stepMessage ="";
 	
 
 }

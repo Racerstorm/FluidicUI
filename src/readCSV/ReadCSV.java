@@ -20,7 +20,7 @@ public class ReadCSV {
 
 	public static void readfromCSV() throws FileNotFoundException, IOException
 	{
-	  StorageVariables.csvLocation="D:\\eclipse-workspace\\Test.csv";
+	  StorageVariables.csvLocation="F:\\Java Workspace\\Test.csv";
 	  StorageVariables.delimiter='|';
 	 
 	 //csvLocation="D:\\eclipse-workspace\\Test.csv";

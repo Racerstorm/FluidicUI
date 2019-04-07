@@ -1,9 +1,11 @@
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.OutputType;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -30,7 +32,7 @@ import Storage.StorageVariables;
  
 public class LaunchBrowser {
  
-	public static void main(String[]  args) throws MalformedURLException, InterruptedException{
+public static void main(String[]  args) throws MalformedURLException, InterruptedException{
  
  		/*String URL = "http://www.google.com";
  		String Node = "http://localhost:4444/wd/hub";*/
@@ -48,7 +50,7 @@ public class LaunchBrowser {
 		}
 	
 		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
-		StorageVariables.screenshotPath="C:\\Users\\Chitrangadans\\Pictures\\Screenshots\\File";
+		StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\File";
 	//	DesiredCapabilities capability=DesiredCapabilities.chrome();
 		System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
 		ChromeOptions options = new ChromeOptions();
@@ -69,8 +71,8 @@ public class LaunchBrowser {
      
         }
         		
-        TakeSreenshot();
-        Thread.sleep(3000);
+       // TakeSreenshot();
+        //Thread.sleep(3000);
         StorageVariables.driver.quit();
  	}	
 	
@@ -84,6 +86,9 @@ public static void gotoAction()
 		{
 			case "OPEN": Open();
 				break;
+			
+			case "VERIFYPAGETITLE": verifyPageTitle();
+			break;
 			
 			case "CLICK": Click();
 				break;
@@ -213,33 +218,45 @@ public static void gotoAction()
             }
 	}
 
-	public static void Open()
+	public static void Open() throws InterruptedException
 	{
 		try
 		{
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
+			StorageVariables.messageType="success";
+			stepMessageOnPage();
 			System.out.println("Open action was performed successfully.");
 		}
 		
 		catch(Exception e)
 		{
+			StorageVariables.messageType="warning";
+			stepMessageOnPage();
+			TakeSreenshot();
 		  System.out.println("Exception is "+e);
 		}
 		
 	}
 	
-	public static void Click()
+	public static void Click() throws InterruptedException
 	{
      try
      {   
     	 splitTarget(StorageVariables.Target);
     	 waitforElement();
+    	 highlightElement();
     	 StorageVariables.driver.findElement(StorageVariables.by).click();
+    	 StorageVariables.messageType="success";
+		 stepMessageOnPage();
     	 System.out.println("Click action was performed successfully.");
+    	 
      }
           
      catch(Exception e)
      {
+    	    StorageVariables.messageType="error";
+			stepMessageOnPage();
+			TakeSreenshot();
     	// (JavascriptExecutor)driver).executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", StorageVariables.by);
     	 System.out.println("Click action was not performed.");
      }
@@ -247,19 +264,26 @@ public static void gotoAction()
      
      }
      
-     public static void clickifPresent()
+     public static void clickifPresent() throws InterruptedException
      {
     	 try
     	 {
     		 splitTarget(StorageVariables.Target);
     		 if(isElementPresent())
     		 {
+    			 highlightElement();
     			 StorageVariables.driver.findElement(StorageVariables.by).click();
+    			 StorageVariables.messageType="success";
+ 				 stepMessageOnPage();
     			 System.out.println("Element was present on the page and click action was performed.");
+    			 
     		 }
     		 
     		 else
-    		 {
+    		 { 
+    			    StorageVariables.messageType="warning";
+    				stepMessageOnPage();
+    				TakeSreenshot();
     		    System.out.println("Element cannot be clicked as the element isn't present on the page. ");
     		 }
     		 
@@ -269,6 +293,9 @@ public static void gotoAction()
     	 
     	 catch(Exception e)
     	 {
+    		StorageVariables.messageType="error";
+ 			stepMessageOnPage();
+ 			TakeSreenshot();
     	 }
     	 
     	 
@@ -298,7 +325,7 @@ public static void gotoAction()
      }
      
 	
-	public static void javascriptClick()
+	public static void javascriptClick() throws InterruptedException
 	{   
 		try
 		{
@@ -307,23 +334,62 @@ public static void gotoAction()
 		//jse.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", element);
 		((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
 		//jse.executeScript("arguments[0].click();", element);
+		StorageVariables.messageType="success";
+		stepMessageOnPage();
 		}
 		catch(Exception ex)
-		{}
+		{
+			StorageVariables.messageType="error";
+			stepMessageOnPage();
+			TakeSreenshot();
+		}
 	}
 	
-	public static void Type()
+	public static void Type() throws InterruptedException
 	{
 		try
 		{
 		splitTarget(StorageVariables.Target);
+		highlightElement();
 		StorageVariables.driver.findElement(StorageVariables.by).clear();
 		StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
+		StorageVariables.messageType="success";
+		stepMessageOnPage();
 		}
 		catch(Exception e)
 		{
 			System.out.println("Unable to type. Exception caught :"+e);
+			StorageVariables.messageType="error";
+			stepMessageOnPage();
+			TakeSreenshot();
 		}
+	}
+	
+	public static void verifyPageTitle() throws InterruptedException
+	{
+	 try
+	   { 
+		if(StorageVariables.driver.getTitle().contains(StorageVariables.Value))
+		{
+			StorageVariables.messageType="success";
+			stepMessageOnPage();
+            System.out.println("Expected page title :" + StorageVariables.Value+"\n");
+            System.out.println("Expected page title :" + StorageVariables.driver.getTitle());
+		}
+		
+		else
+		{   StorageVariables.messageType="warning";
+			stepMessageOnPage();
+			TakeSreenshot();
+		}
+      }
+	   
+	 catch(Exception e)
+	 {
+		    StorageVariables.messageType="error";
+			stepMessageOnPage();
+			TakeSreenshot();
+	 }
 	}
 	
 	public static void waitForPageLoad()
@@ -382,7 +448,7 @@ public static void gotoAction()
 	}
 
 	
-	public static void waitforElement()
+	public static void waitforElement() throws InterruptedException
 	{
 		splitTarget(StorageVariables.Target);
 		
@@ -391,10 +457,17 @@ public static void gotoAction()
 		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(StorageVariables.by));
 		//element= wait.until(ExpectedConditions.elementToBeClickable(element));
+		//StorageVariables.messageType="success";
+		//stepMessageOnPage();
+		
 		
 		}
-		catch(Exception w)
-		{}
+		catch(Exception e)
+		{
+			StorageVariables.messageType="error";
+			stepMessageOnPage();
+			TakeSreenshot();
+		}
 	}
 	public static void TakeSreenshot()
 	{  
@@ -412,7 +485,7 @@ public static void gotoAction()
 		
 	}
 	
-	public static void mouseOverandClick()
+	public static void mouseOverandClick() throws InterruptedException
 	{
 		try
 		{
@@ -433,27 +506,99 @@ public static void gotoAction()
 		actions.moveToElement(hover).build().perform();
 		//Thread.sleep(2000);
 		actions.moveToElement(clickElement).click().build().perform();
+		StorageVariables.messageType="success";
+		stepMessageOnPage();
 		System.out.println("Hovered on the element and performed the click action successfully.");
-		
 		}
 		catch(Exception m)
-		{ 
+		{   
+			StorageVariables.messageType="error";
+			stepMessageOnPage();
+			TakeSreenshot();
 			System.out.println("Exception "+m+" was caught in the code.");
 		}
 
 	}
 
-	public static void checkAlert() {
-	    try {;
+	public static void checkAlert() throws InterruptedException 
+	{
+	   try {
+		   
 	        WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 2);
 	        wait.until(ExpectedConditions.elementToBeClickable(StorageVariables.by));
 	        Alert alert = StorageVariables.driver.switchTo().alert();
 	        alert.dismiss();
-	    } catch (Exception e) {
-	        //exception handling
-	    }
+	        
+	       }
+	   catch (Exception e)
+	       {
+		     StorageVariables.messageType="error";
+			 stepMessageOnPage();
+			 TakeSreenshot();
+	       }
 	}
+	
+public static void stepMessageOnPage() throws InterruptedException
+{
+	try {
+		StorageVariables.jse=(JavascriptExecutor)StorageVariables.driver;
+	// Check for jQuery on the page, add it if need be
+			StorageVariables.jse.executeScript("if (!window.jQuery) {"
+					+ "var jquery = document.createElement('script'); jquery.type = 'text/javascript';"
+					+ "jquery.src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js';"
+					+ "document.getElementsByTagName('head')[0].appendChild(jquery);" + "}");
+			Thread.sleep(1000);
+
+			// Use jQuery to add jquery-growl to the page
+			StorageVariables.jse.executeScript("$.getScript('https://the-internet.herokuapp.com/js/vendor/jquery.growl.js')");
+
+			//js.executeScript("$.getScript('/Users/NaveenKhunteta/Documents/workspace/Test/src/testcases/jquery.growl.js')");
+
+			// Use jQuery to add jquery-growl styles to the page
+			StorageVariables.jse.executeScript("$('head').append('<link rel=\"stylesheet\" "
+					+ "href=\"https://the-internet.herokuapp.com/css/jquery.growl.css\" " + "type=\"text/css\" />');");
+			Thread.sleep(1000);
+
+			// jquery-growl w/ no frills
+			StorageVariables.jse.executeScript("$.growl({ title: 'Step Info', message: 'Current Step : "+StorageVariables.Action+"' });");
+
+			// jquery-growl w/ colorized output
+			if(StorageVariables.messageType.equals("error"))
+			{
+			 StorageVariables.jse.executeScript("$.growl.error({ title: 'ERROR', message: 'The "+StorageVariables.Action+" action was unsucessful and has failed' });");
+			}
+			
+			else if(StorageVariables.messageType.equals("success"))
+			{
+			 StorageVariables.jse.executeScript("$.growl.notice({ title: 'Passed', message: 'The "+StorageVariables.Action+" action was sucessful' });");
+			}
+			
+			else if(StorageVariables.messageType.equals("warning"))
+			{
+			 StorageVariables.jse.executeScript("$.growl.warning({ title: 'Warning!', message: 'The "+StorageVariables.Action+" action was sucessful with warnings' });");
+			}
+	}
+	catch(Exception e)
+	{
+		System.out.println("Exception is "+e);
+	}
+	
 }
+
+public static void highlightElement(){
+	StorageVariables.highlightedElement=StorageVariables.driver.findElement(StorageVariables.by);
+	  StorageVariables.jse = (JavascriptExecutor)StorageVariables.driver;
+	  StorageVariables.jse.executeScript("arguments[0].setAttribute('style', 'border: 2px solid red;');", StorageVariables.highlightedElement);
+	 }
+}	
+	    
+
+
+	 
+	    
+
+
+
 	
 	 
 
