@@ -34,5 +34,7 @@ public class StorageVariables {
 	public static String messageType="";
 	public static String stepMessage ="";
 	
+	public static boolean testcaseStatus=true;
+	
 
 }

@@ -18,6 +18,7 @@ import org.openqa.selenium.remote.server.handler.ExecuteScript;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -56,7 +57,7 @@ public static void main(String[]  args) throws MalformedURLException, Interrupte
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--start-maximized");
 		options.addArguments("disable-infobars");
-;		StorageVariables.driver = new ChromeDriver(options);
+		StorageVariables.driver = new ChromeDriver(options);
  		
         
         for(int i = 0;i<StorageVariables.actions.size();i++)
@@ -70,7 +71,15 @@ public static void main(String[]  args) throws MalformedURLException, Interrupte
         
      
         }
-        		
+        
+        if(StorageVariables.testcaseStatus==true)
+        {
+        	System.out.println("Testcase passed");
+        }
+        else
+        {
+        	System.out.println("Testcase failed");
+        }
        // TakeSreenshot();
         //Thread.sleep(3000);
         StorageVariables.driver.quit();
@@ -96,6 +105,9 @@ public static void gotoAction()
 			case "JAVASCRIPTCLICK" : javascriptClick();
 				break;
 				
+			case "DOUBLECLICK" : doubleClick();
+			break;
+				
 			case "CLICKIFPRESENT" : clickifPresent();
 				break;
 				
@@ -117,6 +129,12 @@ public static void gotoAction()
 			case "CHECKALERT" : checkAlert();
 				break;
 				
+			case "SWITCHTOIFRAME" : switchToIframe();
+			    break;
+			    
+			case "SLEEP" : Sleep();
+		    break;
+			    
 			case "TAKESCREENSHOT" : TakeSreenshot();
 			break;
 				
@@ -230,7 +248,8 @@ public static void gotoAction()
 		
 		catch(Exception e)
 		{
-			StorageVariables.messageType="warning";
+			StorageVariables.testcaseStatus=false;
+			StorageVariables.messageType="error";
 			stepMessageOnPage();
 			TakeSreenshot();
 		  System.out.println("Exception is "+e);
@@ -253,12 +272,21 @@ public static void gotoAction()
      }
           
      catch(Exception e)
-     {
+     {   
+    	 try
+    	 {
+    		 javascriptClick();
+    	 }
+    	 
+    	 catch(Exception Ee) 
+    	 {
+    		StorageVariables.testcaseStatus=false;
     	    StorageVariables.messageType="error";
 			stepMessageOnPage();
 			TakeSreenshot();
-    	// (JavascriptExecutor)driver).executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", StorageVariables.by);
-    	 System.out.println("Click action was not performed.");
+    	    // (JavascriptExecutor)driver).executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", StorageVariables.by);
+    	     System.out.println("Click action was not performed.");
+    	 }
      }
     	 
      
@@ -330,6 +358,7 @@ public static void gotoAction()
 		try
 		{
 		splitTarget(StorageVariables.Target);
+		highlightElement();
 		StorageVariables.element=StorageVariables.driver.findElement(StorageVariables.by);
 		//jse.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", element);
 		((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
@@ -341,6 +370,24 @@ public static void gotoAction()
 		{
 			StorageVariables.messageType="error";
 			stepMessageOnPage();
+			TakeSreenshot();
+		}
+	}
+	
+	public static void doubleClick()
+	{
+		try
+		{
+			splitTarget(StorageVariables.Target);
+			highlightElement();
+			StorageVariables.element=StorageVariables.driver.findElement(StorageVariables.by);
+			((JavascriptExecutor) StorageVariables.driver).executeScript("var evt = document.createEvent('MouseEvents');"+ 
+				    "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);"+ 
+				    "arguments[0].dispatchEvent(evt);", StorageVariables.element);
+		}
+		
+		catch(Exception e)
+		{
 			TakeSreenshot();
 		}
 	}
@@ -547,17 +594,33 @@ public static void stepMessageOnPage() throws InterruptedException
 					+ "var jquery = document.createElement('script'); jquery.type = 'text/javascript';"
 					+ "jquery.src = 'https://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js';"
 					+ "document.getElementsByTagName('head')[0].appendChild(jquery);" + "}");
-			Thread.sleep(1000);
+			Thread.sleep(500);
 
 			// Use jQuery to add jquery-growl to the page
-			StorageVariables.jse.executeScript("$.getScript('https://the-internet.herokuapp.com/js/vendor/jquery.growl.js')");
+			try
+			{
+				StorageVariables.jse.executeScript("$.getScript('https://the-internet.herokuapp.com/js/vendor/jquery.growl.js')");
+			
+			    StorageVariables.jse.executeScript("$('head').append('<link rel=\"stylesheet\" "
+					+ "href=\"https://the-internet.herokuapp.com/css/jquery.growl.css\" " + "type=\"text/css\" />');");
+			}
+			catch(Exception ec)
+			{
+			StorageVariables.jse.executeScript("var script = document.createElement(\"script\");  // create a script DOM node\n" + 
+					"script.src = 'https://the-internet.herokuapp.com/js/vendor/jquery.growl.js';  \n" + 
+					"document.head.appendChild(script); \n" + 
+					"var style   = document.createElement( 'link' );\n" + 
+					"style.rel   = 'stylesheet';\n" + 
+					"style.type  = 'text/css';\n" + 
+					"style.href  = \" https://the-internet.herokuapp.com/css/jquery.growl.css\";\n" + 
+					"document.getElementsByTagName( 'head' )[0].appendChild( style );");
+			}	
 
 			//js.executeScript("$.getScript('/Users/NaveenKhunteta/Documents/workspace/Test/src/testcases/jquery.growl.js')");
 
 			// Use jQuery to add jquery-growl styles to the page
-			StorageVariables.jse.executeScript("$('head').append('<link rel=\"stylesheet\" "
-					+ "href=\"https://the-internet.herokuapp.com/css/jquery.growl.css\" " + "type=\"text/css\" />');");
-			Thread.sleep(1000);
+			
+			Thread.sleep(500);
 
 			// jquery-growl w/ no frills
 			StorageVariables.jse.executeScript("$.growl({ title: 'Step Info', message: 'Current Step : "+StorageVariables.Action+"' });");
@@ -590,6 +653,35 @@ public static void highlightElement(){
 	  StorageVariables.jse = (JavascriptExecutor)StorageVariables.driver;
 	  StorageVariables.jse.executeScript("arguments[0].setAttribute('style', 'border: 2px solid red;');", StorageVariables.highlightedElement);
 	 }
+
+public static void switchToIframe() {
+	
+	try {
+		
+		splitTarget(StorageVariables.Target);
+		highlightElement();
+		WebElement frame = StorageVariables.driver.findElement(StorageVariables.by);
+		
+	StorageVariables.driver.switchTo().frame(frame);
+	System.out.println("Switched to iframe");
+		
+		
+	}
+	catch(Exception ex) {
+		System.out.println("Cannot switch to iframe");
+	}
+}
+
+public static void Sleep()
+{
+	long sleepTime = Integer.parseInt(StorageVariables.Value);
+	try {
+		Thread.sleep(sleepTime);
+	} catch (InterruptedException e) {
+		
+		e.printStackTrace();
+	}
+}
 }	
 	    
 
