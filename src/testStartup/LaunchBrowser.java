@@ -55,7 +55,7 @@ public static void main(String[]  args) throws MalformedURLException, Interrupte
         	System.out.println("Testcase failed");
         }
        
-          StorageVariables.driver.quit();
+            StorageVariables.driver.quit();
  	}	
 	
 public static void gotoAction() 

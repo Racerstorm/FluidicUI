@@ -34,7 +34,7 @@ public class CustomActions
 	public static void getElementStyle()
 	{  
 		LaunchBrowser.splitTarget(StorageVariables.Target);
-				
+				 
 		//Get element background-color
 	    WebElement el = StorageVariables.driver.findElement(StorageVariables.by);
 	    
@@ -48,6 +48,7 @@ public class CustomActions
 	                    "return s;";
 
 	    System.out.println(executor.executeScript(script, el));
+	    
 	    String contents = (String) ((JavascriptExecutor) StorageVariables.driver)
 	            .executeScript("return window.getComputedStyle(arguments[0]).getPropertyValue('background-color');", el);
 	    System.out.println("Element background color in RGB : "+contents);
