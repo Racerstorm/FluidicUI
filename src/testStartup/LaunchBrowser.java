@@ -109,6 +109,9 @@ public static void gotoAction()
 			    
 			case "TAKESCREENSHOT" : PageActions.TakeSreenshot();
 			break;
+			
+			case "GETELEMENTSTYLE": CustomActions.getElementStyle();
+			break;
 				
 		}
 	}

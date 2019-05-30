@@ -1,6 +1,7 @@
 package actions;
 
 import org.openqa.selenium.Alert;
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -29,6 +30,51 @@ public class CustomActions
 			 PageActions.TakeSreenshot();
 	       }
 	}
+	
+	public static void getElementStyle()
+	{
+		LaunchBrowser.splitTarget(StorageVariables.Target);
+		
+		
+		//Get element background-color
+	    WebElement el = StorageVariables.driver.findElement(StorageVariables.by);
+	    
+	    String styles=StorageVariables.driver.findElement(StorageVariables.by).getAttribute("style");
+	    
+	    JavascriptExecutor executor = (JavascriptExecutor)StorageVariables.driver;
+	    String script = "var s = '';" +
+	                    "var o = getComputedStyle(arguments[0]);" +
+	                    "for(var i = 0; i < o.length; i++){" +
+	                    "s+=o[i] + ':' + o.getPropertyValue(o[i])+'\\n';}" + 
+	                    "return s;";
+
+	    System.out.println(executor.executeScript(script, el));
+	    String contents = (String) ((JavascriptExecutor) StorageVariables.driver)
+	            .executeScript("return window.getComputedStyle(arguments[0]).getPropertyValue('background-color');", el);
+	    System.out.println("Element background color in RGB : "+contents);
+	    
+	    //Get element color
+	    String color = (String) ((JavascriptExecutor) StorageVariables.driver)
+	            .executeScript("return window.getComputedStyle(arguments[0]).getPropertyValue('color');", el);
+	    int red = Integer.parseInt(color.split(",")[0].replaceAll("[^\\d.]", "")); 
+	    int green = Integer.parseInt(color.split(",")[1].replaceAll("[^\\d.]", "")); 
+	    int blue = Integer.parseInt(color.split(",")[2].replaceAll("[^\\d.]", "")); 
+	    String hex = String.format("#%02x%02x%02x", red, green, blue);	    	       
+	    System.out.println("Element color in Hex : " +hex);
+	    
+	    //Get element font family
+	    String fontFamily = (String) ((JavascriptExecutor) StorageVariables.driver)
+	            .executeScript("return window.getComputedStyle(arguments[0]).getPropertyValue('font-family');", el);
+	    System.out.println("Element font family : "+fontFamily);
+	    
+	    //Get element font size
+	    String fontSize = (String) ((JavascriptExecutor) StorageVariables.driver)
+	            .executeScript("return window.getComputedStyle(arguments[0]).getPropertyValue('font-size');", el);
+	    System.out.println("Element font size : "+fontSize);
+	    
+	}
+	
+	
 	
 public static void stepMessageOnPage() throws InterruptedException
 {
