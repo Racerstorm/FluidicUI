@@ -32,7 +32,7 @@ public class CustomActions
 	}
 	
 	public static void getElementStyle()
-	{
+	{ 
 		LaunchBrowser.splitTarget(StorageVariables.Target);
 		
 		

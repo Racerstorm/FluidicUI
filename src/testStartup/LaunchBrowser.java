@@ -62,7 +62,7 @@ public static void gotoAction()
 {
 	
 	try 
-	{	
+	{	  
 		switch(StorageVariables.Action.toUpperCase()) 
 		{
 			case "OPEN": CommonActions.Open();
