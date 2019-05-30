@@ -32,10 +32,9 @@ public class CustomActions
 	}
 	
 	public static void getElementStyle()
-	{ 
+	{  
 		LaunchBrowser.splitTarget(StorageVariables.Target);
-		
-		
+				
 		//Get element background-color
 	    WebElement el = StorageVariables.driver.findElement(StorageVariables.by);
 	    
