@@ -11,6 +11,7 @@ public class StorageVariables {
 
 	public static WebDriver driver;
 	public static String driverPath= "";
+	public static String browser= "";
 	public static JavascriptExecutor jse;
 	public static String Action="";
 	public static String Target="";

@@ -38,7 +38,7 @@ public class CustomActions
 		//Get element background-color
 	    WebElement el = StorageVariables.driver.findElement(StorageVariables.by);
 	    
-	    String styles=StorageVariables.driver.findElement(StorageVariables.by).getAttribute("style");
+	    //String styles=StorageVariables.driver.findElement(StorageVariables.by).getAttribute("style");
 	    
 	    JavascriptExecutor executor = (JavascriptExecutor)StorageVariables.driver;
 	    String script = "var s = '';" +
@@ -46,8 +46,58 @@ public class CustomActions
 	                    "for(var i = 0; i < o.length; i++){" +
 	                    "s+=o[i] + ':' + o.getPropertyValue(o[i])+'\\n';}" + 
 	                    "return s;";
+	    String styleVal = "let compStyles = window.getComputedStyle(arguments[0]);\r\n" + 
+	    		"var allowedPatterns = [ \r\n" + 
+	    		"  \"font-family\", \r\n" + 
+	    		"  \"font-size\",\r\n" + 
+	    		"  \"line-height\",\r\n" + 
+	    		"  \"text-decoration\",\r\n" + 
+	    		"  \"word-spacing\",\r\n" + 
+	    		"  \"background-color\",\r\n" + 
+	    		"  \"background-image\",\r\n" + 
+	    		"  \"background-position\",\r\n" + 
+	    		"  \"background-repeat\",\r\n" + 
+	    		"  \"color\",\r\n" + 
+	    		"  \"height\",\r\n" + 
+	    		"  \"width\",\r\n" + 
+	    		"  \"padding\",\r\n" + 
+	    		"  \"display\",\r\n" + 
+	    		"  \"transition\",\r\n" + 
+	    		"  \"transform\",\r\n" + 
+	    		"  \"outline\"\r\n" + 
+	    		"];\r\n" + 
+	    		"\r\n" + 
+	    		"var allowedRegexStr = '^(?:' + \r\n" + 
+	    		"  allowedPatterns.\r\n" + 
+	    		"    join('|').\r\n" + 
+	    		"    replace(/\\./g, '\\\\.').\r\n" + 
+	    		"    replace(/X/g, '\\d+') + \r\n" + 
+	    		"  ')$';\r\n" + 
+	    		"\r\n" + 
+	    		" var allowedRegexp = new RegExp(allowedRegexStr);\r\n" + 
+	    		"var filtered = [];\r\n" + 
+	    		"for (let k = 0; k < Object.values(compStyles).length; ++k) {\r\n" + 
+	    		"    let item = Object.values(compStyles)[k];\r\n" + 
+	    		"    if (item.match(allowedRegexp))\r\n" + 
+	    		"filtered.push(item); \r\n" + 
+	    		"}\r\n" + 
+	    		"var val = [];\r\n" + 
+	    		"var len = filtered.length;\r\n" + 
+	    		"for (var i=0; i< len; ++i) {\r\n" + 
+	    		"let k = compStyles.getPropertyValue(filtered[i]);\r\n" + 
+	    		"val.push(k);\r\n" + 
+	    		"}\r\n" + 
+	    		"var resultArray = [];\r\n" + 
+	    		"for(var i=0; i<len; i++){\r\n" + 
+	    		"  var obj = {};\r\n" + 
+	    		"     obj[filtered[i]] = val[i];\r\n" + 
+	    		"\r\n" + 
+	    		"   resultArray.push(obj);\r\n" + 
+	    		"}\r\n" + 
+	    		"return resultArray; ";
+	    System.out.println(executor.executeScript(styleVal, el));
 
-	    System.out.println(executor.executeScript(script, el));
+	   // System.out.println(executor.executeScript(script, el));
 	    
 	    String contents = (String) ((JavascriptExecutor) StorageVariables.driver)
 	            .executeScript("return window.getComputedStyle(arguments[0]).getPropertyValue('background-color');", el);
@@ -162,4 +212,6 @@ public static void switchToIframe() {
 	}
 }
 
+
 }
+

@@ -1,10 +1,15 @@
 package testStartup;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
 import Storage.StorageVariables;
 import actions.CommonActions;
 import actions.CustomActions;
@@ -25,16 +30,41 @@ public static void main(String[]  args) throws MalformedURLException, Interrupte
 		    {
         	  e.printStackTrace();
 		    }
-				
-		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
+		StorageVariables.browser="Chrome";		
 		StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\File";
+		
+		if(StorageVariables.browser=="Chrome")
+		{
+		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
 	//	DesiredCapabilities capability=DesiredCapabilities.chrome();
 		System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--start-maximized");
 		options.addArguments("disable-infobars");
+		//options.addExtensions(new File("C:\\Automation\\Extensions\\extension_1_7.crx"));
 		StorageVariables.driver = new ChromeDriver(options);
- 		
+		}
+		
+		else if(StorageVariables.browser=="Firefox")
+		{
+			StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\geckodriver.exe";
+			System.setProperty("webdriver.gecko.driver", StorageVariables.driverPath);
+			StorageVariables.driver=new FirefoxDriver();
+		}
+		
+		else if(StorageVariables.browser=="IE")
+		{
+			StorageVariables.driverPath ="C:\\Automation\\WebDrivers\\IEDriverServer.exe";
+			System.setProperty("webdriver.ie.driver",StorageVariables.driverPath);
+			DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer();
+			capabilities.setCapability("requireWindowFocus", true);  
+			capabilities.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, false);
+			capabilities.setCapability("ie.ensureCleanSession", true);
+			capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS, true);
+			capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
+			StorageVariables.driver=new InternetExplorerDriver(capabilities);
+			
+		}
         
         for(int i = 0;i<StorageVariables.actions.size();i++)
         {
