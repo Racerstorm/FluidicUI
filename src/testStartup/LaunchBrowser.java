@@ -1,8 +1,4 @@
 package testStartup;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.MalformedURLException;
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -14,25 +10,12 @@ import Storage.StorageVariables;
 import actions.CommonActions;
 import actions.CustomActions;
 import actions.PageActions;
-import readCSV.ReadCSV;
  
+
 public class LaunchBrowser {
  
-public static void main(String[]  args) throws MalformedURLException, InterruptedException
-{		
-	//Read test case steps from CSV file.
-		try
-		{
-			  ReadCSV.readfromCSV();
-	    }
-		
-		catch (Exception e) 
-		    {
-        	  e.printStackTrace();
-		    }
-		StorageVariables.browser="Chrome";		
-		StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\File";
-		
+public static void LaunchBrowser()
+{
 		if(StorageVariables.browser=="Chrome")
 		{
 		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
@@ -65,28 +48,9 @@ public static void main(String[]  args) throws MalformedURLException, Interrupte
 			StorageVariables.driver=new InternetExplorerDriver(capabilities);
 			
 		}
+}       
         
-        for(int i = 0;i<StorageVariables.actions.size();i++)
-        {
-        	StorageVariables.Action = StorageVariables.actions.get(i);
-        	StorageVariables.Target = StorageVariables.targets.get(i);
-        	StorageVariables.Value = StorageVariables.values.get(i);
-            System.out.println("Executing Step : "+i);
-        	gotoAction();
-        	System.out.println("Completed Step : "+i+": "+StorageVariables.Action+"");
-        }
-        
-        if(StorageVariables.testcaseStatus==true)
-        {
-        	System.out.println("Testcase passed");
-        }
-        else
-        {
-        	System.out.println("Testcase failed");
-        }
-       
-            StorageVariables.driver.quit();
- 	}	
+
 	
 public static void gotoAction() 
 {

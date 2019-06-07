@@ -16,39 +16,37 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Storage.StorageVariables;
+import logger.Logger;
 import testStartup.LaunchBrowser;
 
 public class PageActions 
 {
 
-	public static void verifyPageTitle() throws InterruptedException
+	public static void verifyPageTitle()
 	{
 	 try
 	   { 
 		if(StorageVariables.driver.getTitle().contains(StorageVariables.Value))
 		{
-			StorageVariables.messageType="success";
-			CustomActions.stepMessageOnPage();
-            System.out.println("Expected page title :" + StorageVariables.Value+"\n");
-            System.out.println("Expected page title :" + StorageVariables.driver.getTitle());
+            Logger.logmessage("Expected page title :" + StorageVariables.Value+"\n");
+            Logger.logmessage("Actual page title :" + StorageVariables.driver.getTitle());
+            Logger.logsuccess("Expected and actual titles match"); 
 		}
 		
 		else
-		{   StorageVariables.messageType="warning";
-			CustomActions.stepMessageOnPage();
-			TakeSreenshot();
+		{   
+			Logger.logwarning("Expected and actual titles do not match");
 		}
+		
       }
 	   
 	 catch(Exception e)
 	 {
-		    StorageVariables.messageType="error";
-			CustomActions.stepMessageOnPage();
-			TakeSreenshot();
+		 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
 	 }
 	}
 	
-	public static void waitForPageLoad()
+	public static void waitForPageLoad() 
 	{
 		try
 		{
@@ -59,7 +57,7 @@ public class PageActions
 				if(pageLoadState.toUpperCase().equals("COMPLETE") || pageLoadState.toUpperCase().equals("LOADED"))
 				{
 					//ResultLogger.log("Page Load State: "+pageLoadState,ISSTEPACTION.True,RESULT.PASS);
-					System.out.println("Page Load State: "+pageLoadState);
+					Logger.logmessage("Page Load State: "+pageLoadState);
 
 					break;
 				}
@@ -67,9 +65,9 @@ public class PageActions
 
 			}
 		}
-		catch(Exception ex)
+		catch(Exception e)
 		{
-
+          Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Failure at WaitforPageLoad ");
 		}
 		
 	}
@@ -103,7 +101,7 @@ public class PageActions
 	  return wait.until(jQueryLoad) && wait.until(jsLoad);
 	}
 	
-	public static void waitforElement() throws InterruptedException
+	public static void waitforElement() 
 	{
 		LaunchBrowser.splitTarget(StorageVariables.Target);
 		
@@ -111,21 +109,15 @@ public class PageActions
 	 {
 		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(StorageVariables.by));
-		//element= wait.until(ExpectedConditions.elementToBeClickable(element));
-		//StorageVariables.messageType="success";
-		//stepMessageOnPage();
-		
-		
-		}
+		Logger.logmessage("Element found on the page.");
+	}
 		catch(Exception e)
 		{
-			StorageVariables.messageType="error";
-			CustomActions.stepMessageOnPage();
-		    TakeSreenshot();
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" WaitforElement function failed.");
 		}
 	}
 
-	public static void TakeSreenshot()
+	public static void TakeSreenshot() 
 	{  
 		waitForPageLoad();
 		 
@@ -133,21 +125,28 @@ public class PageActions
 		{
 		File scrFile = ((TakesScreenshot)StorageVariables.driver).getScreenshotAs(OutputType.FILE);
 		DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); // add S if you need milliseconds
-		FileUtils.copyFile(scrFile, new File(StorageVariables.screenshotPath+ df.format(new Date()) + ".png"));
+		StorageVariables.screenshotFile=StorageVariables.screenshotPath+ df.format(new Date()) +"_"+StorageVariables.stepNumber+"_"+StorageVariables.Action+".png";
+		FileUtils.copyFile(scrFile, new File(StorageVariables.screenshotFile));
 		}
 		
 		catch(Exception exc)
-		{}
+		{Logger.logerror("Unable to capture screenshots.");}
 		
 	}
 
 	public static void highlightElement(){
-		StorageVariables.highlightedElement=StorageVariables.driver.findElement(StorageVariables.by);
-		  StorageVariables.jse = (JavascriptExecutor)StorageVariables.driver;
-		  StorageVariables.jse.executeScript("arguments[0].setAttribute('style', 'border: 2px solid red;');", StorageVariables.highlightedElement);
+		
+		try
+		{
+			StorageVariables.highlightedElement=StorageVariables.driver.findElement(StorageVariables.by);
+		    StorageVariables.jse = (JavascriptExecutor)StorageVariables.driver;
+		    StorageVariables.jse.executeScript("arguments[0].setAttribute('style', 'border: 2px solid red;');", StorageVariables.highlightedElement);
+		}
+		catch(Exception e)
+		{}
 		 }
 
-	   public static boolean isElementPresent()
+    public static boolean isElementPresent() 
 	     {
 	    	 boolean elementPresence = false;
 	    	 
@@ -156,13 +155,13 @@ public class PageActions
 	    	   StorageVariables.driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
 	    	   StorageVariables.driver.findElement(StorageVariables.by);
 	    	   elementPresence=true;
-	    	   System.out.println("Element is present on the page.");
+	    	   Logger.logmessage("Element is present on the page.");
 	    	 }
 	    
 	    	  catch(Exception e)
 	    	  {
 	    		elementPresence=false;  
-	    		System.out.println("Element is not present\n");
+	    		Logger.logwarning("Element is not present\n");
 	    	  }
 	    	  
 	    	  StorageVariables.driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
@@ -170,7 +169,6 @@ public class PageActions
 	     
 	     }
 
-	
 	public static void Sleep()
 	{
 		long sleepTime = Integer.parseInt(StorageVariables.Value);

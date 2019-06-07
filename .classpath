@@ -27,5 +27,15 @@
 	<classpathentry kind="lib" path="C:/Automation/Libs/okio-1.14.0.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/opencsv-3.3.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/selenium-server-standalone-3.141.59.jar"/>
+	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/extentreports-4.0.9.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Admin/Downloads/extentreports-java-2.41.2/extentreports-java-2.41.2/extentreports-2.41.2.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/testng-6.9.9.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/relevantcodes.extentreport jars/bson-3.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/relevantcodes.extentreport jars/freemarker-2.3.23.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/relevantcodes.extentreport jars/jsoup-1.8.3.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/relevantcodes.extentreport jars/mongodb-driver-3.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/relevantcodes.extentreport jars/mongodb-driver-core-3.0.4.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/relevantcodes.extentreport jars/sqlite-jdbc-3.8.11.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

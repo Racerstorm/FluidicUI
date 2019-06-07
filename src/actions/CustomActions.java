@@ -8,12 +8,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Storage.StorageVariables;
+import logger.Logger;
 import testStartup.LaunchBrowser;
 
 public class CustomActions 
 {
 
-	public static void checkAlert() throws InterruptedException 
+	public static void checkAlert() 
 	{
 	   try {
 		   
@@ -21,13 +22,12 @@ public class CustomActions
 	        wait.until(ExpectedConditions.elementToBeClickable(StorageVariables.by));
 	        Alert alert = StorageVariables.driver.switchTo().alert();
 	        alert.dismiss();
+	        Logger.logsuccess("Alert handled on the page.");
 	        
 	       }
 	   catch (Exception e)
 	       {
-		     StorageVariables.messageType="error";
-			 stepMessageOnPage();
-			 PageActions.TakeSreenshot();
+		   Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
 	       }
 	}
 	
@@ -165,7 +165,7 @@ public static void stepMessageOnPage() throws InterruptedException
 
 			// Use jQuery to add jquery-growl styles to the page
 			
-			Thread.sleep(3000);
+			Thread.sleep(2000);
 
 			// jquery-growl w/ no frills
 			StorageVariables.jse.executeScript("$.growl({ title: 'Step Info', message: 'Current Step : "+StorageVariables.Action+"' });");
@@ -194,21 +194,19 @@ public static void stepMessageOnPage() throws InterruptedException
 }
 
 
-public static void switchToIframe() {
-	
-	try {
+public static void switchToIframe()
+{	
+	try 
+	{
 		
 		LaunchBrowser.splitTarget(StorageVariables.Target);
 		PageActions.highlightElement();
 		WebElement frame = StorageVariables.driver.findElement(StorageVariables.by);
-		
-	StorageVariables.driver.switchTo().frame(frame);
-	System.out.println("Switched to iframe");
-		
-		
+		StorageVariables.driver.switchTo().frame(frame);
+	    Logger.logsuccess("Switched to iframe successfully.");			
 	}
-	catch(Exception ex) {
-		System.out.println("Cannot switch to iframe");
+	catch(Exception e) {
+		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Cannot switch to iframe");
 	}
 }
 

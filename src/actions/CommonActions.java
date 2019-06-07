@@ -4,42 +4,40 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import Storage.StorageVariables;
 import testStartup.LaunchBrowser;
+import logger.Logger;
+
 public class CommonActions
 {
 
-	public static void Open() throws InterruptedException
+	public static void Open() 
 	{
 		try
 		{
+			Logger.logmessage("Launching the URL : "+StorageVariables.Value);
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
-			StorageVariables.messageType="success";
-			CustomActions.stepMessageOnPage();
-			System.out.println("Open action was performed successfully.");
+			Logger.logsuccess("Launched the URL successfully");
+			
 		}
 		
 		catch(Exception e)
 		{
 			StorageVariables.testcaseStatus=false;
-			StorageVariables.messageType="error";
-			CustomActions.stepMessageOnPage();
-			PageActions.TakeSreenshot();
-		  System.out.println("Exception is "+e);
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
 		}
 		
 	}
 	
-	public static void Click() throws InterruptedException
+	public static void Click() 
 	{
      try
      {   
     	 LaunchBrowser.splitTarget(StorageVariables.Target);
     	 PageActions.waitforElement();
     	 PageActions.highlightElement();
+    	 Logger.logmessage("Clicking the element :");
     	 StorageVariables.driver.findElement(StorageVariables.by).click();
-    	 StorageVariables.messageType="success";
-         CustomActions.stepMessageOnPage();
-    	 System.out.println("Click action was performed successfully.");
-    	 
+    	 Logger.logsuccess("Click action was performed successfully.");
+    	     	 
      }
           
      catch(Exception e)
@@ -47,23 +45,21 @@ public class CommonActions
     	 try
     	 {
     		 javascriptClick();
+    		 
     	 }
     	 
     	 catch(Exception Ee) 
     	 {
     		StorageVariables.testcaseStatus=false;
-    	    StorageVariables.messageType="error";
-    	    CustomActions.stepMessageOnPage();
-    	    PageActions.TakeSreenshot();
-    	    // (JavascriptExecutor)driver).executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", StorageVariables.by);
-    	     System.out.println("Click action was not performed.");
+    		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Click action was not performed.");
+
     	 }
      }
     	 
      
      }
      
-     public static void clickifPresent() throws InterruptedException
+     public static void clickifPresent() 
      {
     	 try
     	 {
@@ -72,35 +68,24 @@ public class CommonActions
     		 {
     			 PageActions.highlightElement();
     			 StorageVariables.driver.findElement(StorageVariables.by).click();
-    			 StorageVariables.messageType="success";
- 				 CustomActions.stepMessageOnPage();
-    			 System.out.println("Element was present on the page and click action was performed.");
-    			 
+    			 Logger.logsuccess("Element was present on the page and click action was performed.");		 
     		 }
     		 
     		 else
     		 { 
-    			    StorageVariables.messageType="warning";
-    			    CustomActions.stepMessageOnPage();
-    			    PageActions.TakeSreenshot();
-    		    System.out.println("Element cannot be clicked as the element isn't present on the page. ");
+    		    Logger.logmessage("Element cannot be clicked as the element isn't present on the page. ");
     		 }
     		 
     	 }
-    		 
-    	 
-    	 
+    		
     	 catch(Exception e)
     	 {
-    		StorageVariables.messageType="error";
-    		CustomActions.stepMessageOnPage();
-		    PageActions.TakeSreenshot();
+    		 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Click action was not performed.");
     	 }
-    	 
     	 
      }     
 	
-	public static void javascriptClick() throws InterruptedException
+	public static void javascriptClick() 
 	{   
 		try
 		{
@@ -110,18 +95,15 @@ public class CommonActions
 		//jse.executeScript("var evt = document.createEvent('MouseEvents');" + "evt.initMouseEvent('click',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);" + "arguments[0].dispatchEvent(evt);", element);
 		((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
 		//jse.executeScript("arguments[0].click();", element);
-		StorageVariables.messageType="success";
-		CustomActions.stepMessageOnPage();
+		Logger.logsuccess("Element was found on the page and the click action was performed successfully");
 		}
-		catch(Exception ex)
+		catch(Exception e)
 		{
-			StorageVariables.messageType="error";
-			CustomActions.stepMessageOnPage();
-		    PageActions.TakeSreenshot();
+			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Click action was not performed.");
 		}
 	}
 	
-	public static void doubleClick()
+	public static void doubleClick() 
 	{
 		try
 		{
@@ -131,15 +113,16 @@ public class CommonActions
 			((JavascriptExecutor) StorageVariables.driver).executeScript("var evt = document.createEvent('MouseEvents');"+ 
 				    "evt.initMouseEvent('dblclick',true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0,null);"+ 
 				    "arguments[0].dispatchEvent(evt);", StorageVariables.element);
+			Logger.logsuccess("Double click action was performed successfully.");
 		}
 		
 		catch(Exception e)
 		{
-			PageActions.TakeSreenshot();
+			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Double click was not performed.");
 		}
 	}
 	
-	public static void mouseOverandClick() throws InterruptedException
+	public static void mouseOverandClick()
 	{
 		try
 		{
@@ -161,22 +144,16 @@ public class CommonActions
 		//Thread.sleep(2000);
 		actions.moveToElement(clickElement).click().build().perform();
 		PageActions.waitForPageLoad();
-		StorageVariables.messageType="success";
-		CustomActions.stepMessageOnPage();
-		System.out.println("Hovered on the element and performed the click action successfully.");
+		Logger.logsuccess("Hovered on the element and performed the click action successfully.");
 		}
 		catch(Exception m)
 		{   
-			StorageVariables.messageType="error";
-			CustomActions.stepMessageOnPage();
-		    PageActions.TakeSreenshot();
-			System.out.println("Exception "+m+" was caught in the code.");
+			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+m+" The action was not performed.");
 		}
 
 	}
 
-	
-	public static void Type() throws InterruptedException
+	public static void Type() 
 	{
 		try
 		{
@@ -184,18 +161,13 @@ public class CommonActions
 		PageActions.highlightElement();
 		StorageVariables.driver.findElement(StorageVariables.by).clear();
 		StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
-		StorageVariables.messageType="success";
-		CustomActions.stepMessageOnPage();
+		Logger.logsuccess("Located the element and performed the type action successfully");
 		}
 		catch(Exception e)
 		{
-			System.out.println("Unable to type. Exception caught :"+e);
-			StorageVariables.messageType="error";
-			CustomActions.stepMessageOnPage();
-		    PageActions.TakeSreenshot();
+			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Type action was not performed.");
 		}
 	}
 
-	
 	
 }
