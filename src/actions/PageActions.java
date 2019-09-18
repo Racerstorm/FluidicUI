@@ -25,11 +25,14 @@ public class PageActions
 	public static void verifyPageTitle()
 	{
 	 try
-	   { 
+	   {
+		
+		 StorageVariables.stepLog="Expected page title :" + StorageVariables.Value+"<br>Actual page title :" + StorageVariables.driver.getTitle();
+		
 		if(StorageVariables.driver.getTitle().contains(StorageVariables.Value))
 		{
-            Logger.logmessage("Expected page title :" + StorageVariables.Value+"\n");
-            Logger.logmessage("Actual page title :" + StorageVariables.driver.getTitle());
+            
+           
             Logger.logsuccess("Expected and actual titles match"); 
 		}
 		
@@ -57,7 +60,7 @@ public class PageActions
 				if(pageLoadState.toUpperCase().equals("COMPLETE") || pageLoadState.toUpperCase().equals("LOADED"))
 				{
 					//ResultLogger.log("Page Load State: "+pageLoadState,ISSTEPACTION.True,RESULT.PASS);
-					Logger.logmessage("Page Load State: "+pageLoadState);
+					System.out.println("Page Load State: "+pageLoadState);
 
 					break;
 				}
@@ -109,8 +112,9 @@ public class PageActions
 	 {
 		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
 		wait.until(ExpectedConditions.visibilityOfElementLocated(StorageVariables.by));
-		Logger.logmessage("Element found on the page.");
-	}
+		//Logger.logmessage("Element found on the page.");
+	    StorageVariables.stepLog="Element found on the page.";
+	 }
 		catch(Exception e)
 		{
 			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" WaitforElement function failed.");
@@ -125,7 +129,7 @@ public class PageActions
 		{
 		File scrFile = ((TakesScreenshot)StorageVariables.driver).getScreenshotAs(OutputType.FILE);
 		DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); // add S if you need milliseconds
-		StorageVariables.screenshotFile=StorageVariables.screenshotPath+ df.format(new Date()) +"_"+StorageVariables.stepNumber+"_"+StorageVariables.Action+".png";
+		StorageVariables.screenshotFile=StorageVariables.screenshotPath+StorageVariables.file+"_Step "+StorageVariables.stepNumber+"_"+StorageVariables.Action + df.format(new Date()) +".png";
 		FileUtils.copyFile(scrFile, new File(StorageVariables.screenshotFile));
 		}
 		

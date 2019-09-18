@@ -13,7 +13,7 @@ public class CommonActions
 	{
 		try
 		{
-			Logger.logmessage("Launching the URL : "+StorageVariables.Value);
+			StorageVariables.stepLog="Launching the URL : "+StorageVariables.Value;
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
 			Logger.logsuccess("Launched the URL successfully");
 			
@@ -34,9 +34,9 @@ public class CommonActions
     	 LaunchBrowser.splitTarget(StorageVariables.Target);
     	 PageActions.waitforElement();
     	 PageActions.highlightElement();
-    	 Logger.logmessage("Clicking the element :");
+    	 StorageVariables.stepLog+="<br>Clicking the element :";
     	 StorageVariables.driver.findElement(StorageVariables.by).click();
-    	 Logger.logsuccess("Click action was performed successfully.");
+    	 Logger.logsuccess("Click action was performed successfully.");	
     	     	 
      }
           

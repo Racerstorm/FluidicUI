@@ -1,4 +1,6 @@
 package testStartup;
+import java.util.Collections;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -24,6 +26,8 @@ public static void LaunchBrowser()
 		ChromeOptions options = new ChromeOptions();
 		options.addArguments("--start-maximized");
 		options.addArguments("disable-infobars");
+		options.setExperimentalOption("useAutomationExtension", false); 
+		options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
 		//options.addExtensions(new File("C:\\Automation\\Extensions\\extension_1_7.crx"));
 		StorageVariables.driver = new ChromeDriver(options);
 		}

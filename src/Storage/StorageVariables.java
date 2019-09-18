@@ -1,5 +1,6 @@
 package Storage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class StorageVariables {
 	public static ArrayList<String> actions = new ArrayList<String>();
 	public static ArrayList<String> targets = new ArrayList<String>();
 	public static ArrayList<String> values = new ArrayList<String>();
+	public static String file = "";
 	public static String csvLocation = "";
 	public static char delimiter;
 	public static WebElement highlightedElement=null;
@@ -52,6 +54,7 @@ public class StorageVariables {
 	
 	public static boolean testcaseStatus=true;
 	
+	public static ExtentTest logger=null;
 	public static ExtentReports report=new ExtentReports(htmlreportPath, true);
 	 public static ExtentTest test=new ExtentTest("", "");
 	 

@@ -17,7 +17,9 @@ public class Logger
 		StorageVariables.stepResult=StorageVariables.STEPRESULT.PASSED;
 		if(StorageVariables.stepNumber>0)
 		{
-			StorageVariables.test.log(LogStatus.PASS,log+"\nStep passed : "+StorageVariables.Action);
+			StorageVariables.test.log(LogStatus.PASS,"Executing Step : "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+""
+		    +"<br>"+StorageVariables.Target+"<br>"+StorageVariables.Value+"<br>"+StorageVariables.stepLog+"<br>"+log+"<br>Step passed : "+StorageVariables.Action);
+			
 		try {
 			StorageVariables.messageType="success";
 			CustomActions.stepMessageOnPage();
@@ -26,6 +28,7 @@ public class Logger
 			e.printStackTrace();
 		}
 		}
+		StorageVariables.stepLog="";
 		
 	}
 	
@@ -46,7 +49,10 @@ public class Logger
 		StorageVariables.testcaseResult =StorageVariables.TCRESULT.FAILED;
 		if(!StorageVariables.Action.isEmpty())
 		{
-		StorageVariables.test.log(LogStatus.WARNING, "\nStep failed with warning, but the test case will continue : "+StorageVariables.Action);
+			StorageVariables.test.log(LogStatus.WARNING,"Executing Step : "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+""
+				    +"<br>"+StorageVariables.stepLog+"<br>"+log+"<br>Step failed with warning, but the test case will continue : "+StorageVariables.Action+"<br>");
+					
+	//	StorageVariables.test.log(LogStatus.WARNING, "\nStep failed with warning, but the test case will continue : "+StorageVariables.Action);
 		}
 		
 		else
@@ -71,12 +77,15 @@ public class Logger
 	
 	public static void logerror(String log)
 	{
+		StorageVariables.stepResult= StorageVariables.STEPRESULT.FAILED;
+		
 		System.out.println("\n"+log);
-		StorageVariables.warningCounter++;
+		//StorageVariables.warningCounter++;
 		StorageVariables.stepsLogs.add("\n"+log);
 		StorageVariables.stepResult=StorageVariables.STEPRESULT.FAILED;
 		StorageVariables.testcaseResult =StorageVariables.TCRESULT.FAILED;
-		StorageVariables.test.log(LogStatus.ERROR, log, "Step failed and the test case has been stopped : "+StorageVariables.Action);
+		StorageVariables.test.log(LogStatus.FAIL,"Executing Step : "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+""
+			    +"<br>"+StorageVariables.Target+"<br>"+StorageVariables.Value+"<br>"+StorageVariables.stepLog+"<br>"+log+"<br>Step failed and the test case has been stopped");
 		StorageVariables.messageType="error";
 		try {
 			CustomActions.stepMessageOnPage();
@@ -85,10 +94,11 @@ public class Logger
 		}
 		try {
 			PageActions.TakeSreenshot();
-			StorageVariables.test.addScreenCapture(StorageVariables.screenshotPath+"/"+StorageVariables.screenshotFile);
+			StorageVariables.test.addScreenCapture(StorageVariables.screenshotFile);
 			//StorageVariables.test.fail("details", MediaEntityBuilder.createScreenCaptureFromPath(StorageVariables.screenshotPath+"/"+StorageVariables.screenshotFile).build());
 
 		} catch (Exception e) {
+			System.out.println(e);
 			e.printStackTrace();
 		}
 		Assert.fail();

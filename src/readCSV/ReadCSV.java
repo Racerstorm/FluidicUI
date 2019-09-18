@@ -1,4 +1,5 @@
 package readCSV;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -9,9 +10,24 @@ public class ReadCSV {
 
 	public static void readfromCSV() throws FileNotFoundException, IOException
 	{
-	  StorageVariables.csvLocation="C:\\Automation\\TestData\\Test.csv"; 
+		
+	 // StorageVariables.csvLocation="C:\\Automation\\TestData\\Test.csv"; 
 	  StorageVariables.delimiter='|';
+	  
+	  File folder = new File("/C:/Automation/TestData/");
+	  File[] listOfFiles = folder.listFiles();
+
+	  for (File file : listOfFiles) {
+	      if (file.isFile()) {
+	          	StorageVariables.file=file.getName();
+	          StorageVariables.csvLocation=folder+"\\"+StorageVariables.file;
+	          if (StorageVariables.file.indexOf(".") > 0)
+	        	  StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf("."));
+	         // return fileName;
+	      }
+	  }
 	 
+	  
 	 //csvLocation="D:\\eclipse-workspace\\Test.csv";
 	//public OutputFormatter output;
 	//List<String[]> actions;
