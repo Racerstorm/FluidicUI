@@ -1,4 +1,6 @@
 package actions;
+import java.util.ArrayList;
+
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -15,8 +17,11 @@ public class CommonActions
 		{
 			StorageVariables.stepLog="Launching the URL : "+StorageVariables.Value;
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
-			Logger.logsuccess("Launched the URL successfully");
-			
+			if(StorageVariables.driver.getTitle().contains("503"))
+			{
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed as the URL could not be opened.");
+
+			}
 		}
 		
 		catch(Exception e)
@@ -168,6 +173,30 @@ public class CommonActions
 			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Type action was not performed.");
 		}
 	}
+	
+	public static void switchtoTab()
+	{
+		try
+		{
+		// Store all currently open tabs in tabs
+		ArrayList<String> tabs = new ArrayList<String> (StorageVariables.driver.getWindowHandles());
+
+		// Switch newly open Tab
+		StorageVariables.driver.switchTo().window(tabs.get(Integer.parseInt(StorageVariables.Value)));
+        Logger.logsuccess("Switched to tab : "+StorageVariables.Value+" successfully. ");
+		//Close newly open tab after performing some operations.
+		//StorageVariables.driver.close();
+
+		//Switch to old(Parent) tab.
+	   //StorageVariables.driver.switchTo().window(tabs.get(0));
+		
+	}
+		catch(Exception e)
+		{
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" SwitchToTab action was not performed.");}
+		}
+	
+	}
 
 	
-}
+

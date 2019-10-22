@@ -15,6 +15,7 @@ import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
 import com.relevantcodes.extentreports.LogStatus;
 
+import DBOperations.StepsfromDB;
 import Storage.StorageVariables;
 import actions.PageActions;
 import logger.Logger;
@@ -30,10 +31,20 @@ public class LaunchTest {
   public void Setup() 
   {
 	  Logger.logmessage("Reading steps from the input file");
+	  StorageVariables.testdataSource="csv";
 	//Read test case steps from CSV file.
 			try
 			{
+				if(StorageVariables.testdataSource.equalsIgnoreCase("DB"))
+				{
+				StorageVariables.file="hikvision_qa_create_landingpage";
+				 StepsfromDB.readtestcasestepsfromDB();
+				}
+				
+				else if(StorageVariables.testdataSource.equalsIgnoreCase("csv"))
+				{
 				  ReadCSV.readfromCSV();
+				}
 		    }
 			
 			catch (Exception e) 
@@ -43,7 +54,7 @@ public class LaunchTest {
 			
 		    Properties prop = new Properties();
 		    
-			StorageVariables.browser="Chrome";		
+			StorageVariables.browser="Firefox";		
 			StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\";
 			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\File";
 		    Logger.logmessage("Browser : "+StorageVariables.browser);
@@ -54,8 +65,9 @@ public class LaunchTest {
   }
 
   @Test
-  public void Start()
+  public  void Start()
   {
+	  
 	  Logger.logmessage("----------Starting Test---------"+"<br> Browser : "+StorageVariables.browser+"<br> Testcase : "+StorageVariables.file);
 	  for(int counter= 0;counter<StorageVariables.actions.size();counter++)
       {

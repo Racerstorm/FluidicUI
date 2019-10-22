@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
+import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Parameters;
 
 import Storage.StorageVariables;
 import actions.CommonActions;
@@ -16,6 +18,8 @@ import actions.PageActions;
 
 public class LaunchBrowser {
  
+@Parameters({"browser"})
+@BeforeTest
 public static void LaunchBrowser()
 {
 		if(StorageVariables.browser=="Chrome")
@@ -37,8 +41,9 @@ public static void LaunchBrowser()
 			StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", StorageVariables.driverPath);
 			StorageVariables.driver=new FirefoxDriver();
+			StorageVariables.driver.manage().window().maximize();
 		}
-		
+		/*
 		else if(StorageVariables.browser=="IE")
 		{
 			StorageVariables.driverPath ="C:\\Automation\\WebDrivers\\IEDriverServer.exe";
@@ -51,7 +56,7 @@ public static void LaunchBrowser()
 			capabilities.setCapability(InternetExplorerDriver.FORCE_CREATE_PROCESS, true);
 			StorageVariables.driver=new InternetExplorerDriver(capabilities);
 			
-		}
+		}*/
 }       
         
 
@@ -109,6 +114,9 @@ public static void gotoAction()
 			break;
 			
 			case "GETELEMENTSTYLE": CustomActions.getElementStyle();
+			break;
+			
+			case "SWITCHTOTAB": CommonActions.switchtoTab();
 			break;
 				
 		}

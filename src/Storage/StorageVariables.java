@@ -28,6 +28,7 @@ public class StorageVariables {
 	public static ArrayList<String> targets = new ArrayList<String>();
 	public static ArrayList<String> values = new ArrayList<String>();
 	public static String file = "";
+	public static String testdataSource="";
 	public static String csvLocation = "";
 	public static char delimiter;
 	public static WebElement highlightedElement=null;
@@ -39,6 +40,7 @@ public class StorageVariables {
 	public static String screenshotPath="";
 	public static String htmlreportPath="";
 	public static String screenshotFile="";
+	public static boolean ParallelExecution;
 	
 	public static String stepLog="";
 	public static List<String> stepsLogs= new ArrayList<String>();
@@ -48,7 +50,7 @@ public class StorageVariables {
 	public static String messageType="";
 	public static String stepMessage ="";
 	public enum STEPRESULT {PASSED , FAILED , WARNING};
-	public static STEPRESULT stepResult; 
+	public static STEPRESULT stepResult=STEPRESULT.PASSED; 
 	public enum TCRESULT {PASSED , FAILED};
 	public static TCRESULT testcaseResult;
 	
