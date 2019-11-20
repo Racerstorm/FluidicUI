@@ -22,7 +22,7 @@ public class LaunchBrowser {
 @BeforeTest
 public static void LaunchBrowser()
 {
-		if(StorageVariables.browser=="Chrome")
+		if(StorageVariables.browser.equalsIgnoreCase("Chrome"))
 		{
 		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
 	//	DesiredCapabilities capability=DesiredCapabilities.chrome();
@@ -36,7 +36,7 @@ public static void LaunchBrowser()
 		StorageVariables.driver = new ChromeDriver(options);
 		}
 		
-		else if(StorageVariables.browser=="Firefox")
+		else if(StorageVariables.browser.equalsIgnoreCase("Firefox"))
 		{
 			StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\geckodriver.exe";
 			System.setProperty("webdriver.gecko.driver", StorageVariables.driverPath);
@@ -118,7 +118,9 @@ public static void gotoAction()
 			
 			case "SWITCHTOTAB": CommonActions.switchtoTab();
 			break;
-				
+			case "FILEUPLOAD": CommonActions.fileUpload();
+			break;
+			
 		}
 	}
 	catch(Exception e)

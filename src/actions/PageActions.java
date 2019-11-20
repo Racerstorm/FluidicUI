@@ -117,7 +117,8 @@ public class PageActions
 	 }
 		catch(Exception e)
 		{
-			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" WaitforElement function failed.");
+			//Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" WaitforElement function failed.");
+			//StorageVariables.stepLog="Element not found on the page.";
 		}
 	}
 

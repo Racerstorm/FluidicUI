@@ -1,5 +1,6 @@
 package testStartup;
 import org.testng.annotations.Test;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -22,13 +23,15 @@ import logger.Logger;
 import readCSV.ReadCSV;
 
 @Test
+
 public class LaunchTest {
   
 	ExtentReports extent;
 	
   @BeforeTest
- 
-  public void Setup() 
+  @Parameters("browser")
+
+  public void Setup(String browser) 
   {
 	  Logger.logmessage("Reading steps from the input file");
 	  StorageVariables.testdataSource="csv";
@@ -54,7 +57,7 @@ public class LaunchTest {
 			
 		    Properties prop = new Properties();
 		    
-			StorageVariables.browser="Firefox";		
+			StorageVariables.browser=browser;		
 			StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\";
 			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\File";
 		    Logger.logmessage("Browser : "+StorageVariables.browser);
@@ -100,6 +103,7 @@ public class LaunchTest {
   @AfterTest
   public void Cleanup() 
   {
+	 
 	    if(StorageVariables.stepResult==StorageVariables.STEPRESULT.PASSED)
         {
         	Logger.logmessage("Testcase passed");
@@ -115,10 +119,13 @@ public class LaunchTest {
         	Logger.logmessage("Testcase failed with error(s)");
         	
         }
-       
-	        StorageVariables.driver.close();
-	        StorageVariables.driver.quit();
-	        
+           try
+           {
+	   //     StorageVariables.driver.close();
+	     //   StorageVariables.driver.quit();
+           }
+           catch(Exception e)
+           {}
 	      //Closing the report
 	        StorageVariables.report.endTest(StorageVariables.test);
 	        StorageVariables.report.flush();

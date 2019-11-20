@@ -8,6 +8,11 @@ import Storage.StorageVariables;
 import testStartup.LaunchBrowser;
 import logger.Logger;
 
+import java.awt.Robot;
+import java.awt.Toolkit;
+import java.awt.datatransfer.StringSelection;
+import java.awt.event.KeyEvent;
+
 public class CommonActions
 {
 
@@ -49,14 +54,14 @@ public class CommonActions
      {   
     	 try
     	 {
-    		 javascriptClick();
+    		 ((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
     		 
     	 }
     	 
     	 catch(Exception Ee) 
     	 {
     		StorageVariables.testcaseStatus=false;
-    		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Click action was not performed.");
+    		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+Ee+" Click action was not performed.");
 
     	 }
      }
@@ -193,8 +198,52 @@ public class CommonActions
 	}
 		catch(Exception e)
 		{
-			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" SwitchToTab action was not performed.");}
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" SwitchToTab action was not performed.");
 		}
+		
+	}
+	
+	public static void fileUpload()
+	{
+		try
+		{
+	/*	//File upload button
+		String upload = StorageVariables.Target.split("\\#")[0]; 
+		LaunchBrowser.splitTarget(upload);
+		WebElement uploadButton=StorageVariables.driver.findElement(StorageVariables.by);
+		
+		//File path
+		String file = StorageVariables.Target.split("\\#")[1]; 
+		LaunchBrowser.splitTarget(file);
+		WebElement filepath=StorageVariables.driver.findElement(StorageVariables.by);
+		
+		//Click on the upload button
+		uploadButton.click();
+		filepath.sendKeys(StorageVariables.Value); */
+			
+			StringSelection stringSelection = new StringSelection(StorageVariables.Value);
+			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
+			
+			Robot WindowsDriver = new Robot();
+			WindowsDriver.keyPress(KeyEvent.VK_CONTROL);
+			WindowsDriver.keyPress(KeyEvent.VK_V);
+			WindowsDriver.keyRelease(KeyEvent.VK_V);
+			WindowsDriver.keyRelease(KeyEvent.VK_CONTROL);
+			Thread.sleep(3000);
+			WindowsDriver.keyPress(KeyEvent.VK_ENTER);
+			WindowsDriver.keyRelease(KeyEvent.VK_ENTER);
+			
+			Logger.logsuccess("File upload was performed successfully.");
+		}
+		
+		catch(Exception fileExc)
+		{
+			fileExc.printStackTrace();
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+fileExc+" FileUpload failed.");
+
+		}
+		//StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
+	}
 	
 	}
 

@@ -17,14 +17,8 @@
 	<classpathentry kind="lib" path="C:/Automation/Libs/okhttp-3.11.0.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/okio-1.14.0.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/opencsv-3.3.jar"/>
-	<classpathentry kind="lib" path="C:/Automation/Libs/selenium-server-standalone-3.141.59.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/commons-lang3-3.6.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/commons-text-1.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ust32808/Downloads/selenium-java-3.141.59.zip"/>
-	<classpathentry kind="lib" path="C:/Users/ust32808/Downloads/jar_files (5)/freemarker-2.3.23.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ust32808/Downloads/jar_files (5)/jsoup-1.8.3.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ust32808/Downloads/jar_files (5)/mongodb-driver-3.0.4.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ust32808/Downloads/jar_files (5)/mongodb-driver-core-3.0.4.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/ExtentReport Jars/bson-3.0.4.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/ExtentReport Jars/extentreports-2.41.2.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/ExtentReport Jars/freemarker-2.3.23.jar"/>
@@ -72,7 +66,16 @@
 	<classpathentry kind="lib" path="C:/Automation/Libs/Applitools/ph-css-6.1.1.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/Applitools/slf4j-api-1.7.25.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/Applitools/eyes-selenium-java-1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/ust32808/Downloads/eyes-selenium-java3-3.1.jar"/>
 	<classpathentry kind="lib" path="C:/Automation/Libs/mysql-connector-java-8.0.17.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/com.mysql.jdbc_5.1.5.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/extentreports-2.40.2 (1).jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/extentreports-2.40.2.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/freemarker-2.3.23.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/jsoup-1.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/sqlite-jdbc-3.8.11.1.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/commons-lang3-3.7.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/selenium-server-standalone-3.141.59.jar"/>
+	<classpathentry kind="lib" path="C:/Automation/Libs/java-client-1.5.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
