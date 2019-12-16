@@ -29,9 +29,10 @@ public class LaunchTest {
 	ExtentReports extent;
 	
   @BeforeTest
-  @Parameters("browser")
+//  @Parameters("browser")
+  @Parameters({ "browser", "mobileautomation" })
 
-  public void Setup(String browser) 
+  public void Setup(String browser,boolean mobileautomation) 
   {
 	  Logger.logmessage("Reading steps from the input file");
 	  StorageVariables.testdataSource="csv";
@@ -57,7 +58,8 @@ public class LaunchTest {
 			
 		    Properties prop = new Properties();
 		    
-			StorageVariables.browser=browser;		
+			StorageVariables.browser=browser;	
+			StorageVariables.mobileAutomation=mobileautomation;
 			StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\";
 			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\File";
 		    Logger.logmessage("Browser : "+StorageVariables.browser);
@@ -121,8 +123,8 @@ public class LaunchTest {
         }
            try
            {
-	   //     StorageVariables.driver.close();
-	     //   StorageVariables.driver.quit();
+	        StorageVariables.driver.close();
+	        StorageVariables.driver.quit();
            }
            catch(Exception e)
            {}

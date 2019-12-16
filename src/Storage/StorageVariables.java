@@ -41,6 +41,7 @@ public class StorageVariables {
 	public static String htmlreportPath="";
 	public static String screenshotFile="";
 	public static boolean ParallelExecution;
+	public static boolean mobileAutomation=false;
 	
 	public static String stepLog="";
 	public static List<String> stepsLogs= new ArrayList<String>();

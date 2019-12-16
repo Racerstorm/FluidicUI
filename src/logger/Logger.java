@@ -71,7 +71,7 @@ public class Logger
 		}
 		
 		try {
-			PageActions.TakeSreenshot();
+		//	PageActions.TakeSreenshot();
 			StorageVariables.test.addScreenCapture(StorageVariables.screenshotFile);
 		} catch (Exception e) {
 			e.printStackTrace();

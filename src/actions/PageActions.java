@@ -11,6 +11,7 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -48,6 +49,35 @@ public class PageActions
 		 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
 	 }
 	}
+	
+	public static void verifyText()
+	{
+		try
+		{
+		LaunchBrowser.splitTarget(StorageVariables.Target);
+		PageActions.highlightElement();
+		String text = StorageVariables.driver.findElement(StorageVariables.by).getText();
+		StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text :" + text;
+		if(!text.isEmpty())
+		{
+			if(StorageVariables.Value.contains(text)) 
+			{
+				  Logger.logsuccess("Expected and actual texts match"); 	
+			}
+			
+			else
+			{   
+				Logger.logwarning("Expected and actual texts do not match");
+			}
+			
+		}
+		}
+		catch(Exception e)
+		{
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
+		}
+		
+		}
 	
 	public static void waitForPageLoad() 
 	{
@@ -166,14 +196,60 @@ public class PageActions
 	    	  catch(Exception e)
 	    	  {
 	    		elementPresence=false;  
-	    		Logger.logwarning("Element is not present\n");
+	    		//Logger.logwarning("Element is not present\n");
 	    	  }
 	    	  
 	    	  StorageVariables.driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 	    	  return elementPresence;
 	     
 	     }
+    
+    public static void verifyElementPresent()
+    {
+    
+    	try
+    	{
+    	if(isElementPresent())
+    	{
+    		  Logger.logsuccess("Element is  present");
+    	}
+    	
+    	else
+    	{
+    		 Logger.logwarning("Element is not present");
+    	}
+    	
+    	}
+    	catch(Exception e)
+    	{
+    		Logger.logerror("Action failed with the exception "+e);
+    	}
+    	
+    }
 
+    public static void verifyElementnotPresent()
+    {
+    
+    	try
+    	{
+    		LaunchBrowser.splitTarget(StorageVariables.Target);
+    		if(!isElementPresent())
+    		{
+    		  Logger.logsuccess("Element is not present");
+    		}
+    	
+    		else
+    		{
+    		 Logger.logwarning("Element is present");
+    		}
+    	
+    	}
+    	catch(Exception e)
+    	{
+    		Logger.logerror("Action failed with the exception "+e);
+    	}
+    	
+    }
 	public static void Sleep()
 	{
 		long sleepTime = Integer.parseInt(StorageVariables.Value);

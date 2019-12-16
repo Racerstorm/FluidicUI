@@ -12,6 +12,7 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
+import org.openqa.selenium.support.ui.Select;  
 
 public class CommonActions
 {
@@ -179,6 +180,47 @@ public class CommonActions
 		}
 	}
 	
+	public static void Select()
+	{
+		try
+		{
+			LaunchBrowser.splitTarget(StorageVariables.Target);
+			
+			String option = StorageVariables.Value.split("\\#")[0]; 
+			String dropdownvalue = StorageVariables.Value.split("\\#")[1]; 
+		
+					
+			
+		//	LaunchBrowser.splitTarget(dropdownvalue);
+			
+			
+			Select dropdown = new Select(StorageVariables.driver.findElement(StorageVariables.by));
+		
+				switch(option.toUpperCase()) 
+				{
+					case "VISIBLETEXT":
+						dropdown.selectByVisibleText(dropdownvalue);
+						break;
+					
+					case "INDEX": 
+						int dropdownValue = Integer.parseInt(dropdownvalue);
+						dropdown.selectByIndex(dropdownValue);
+					break;
+					
+					case "VALUE":
+						dropdown.selectByValue(dropdownvalue);
+						break;
+						
+				}	
+		}
+				catch(Exception e)
+				{
+					System.out.println("Invalid action : The exception is : "+e);
+				}
+		
+		  
+	}
+	
 	public static void switchtoTab()
 	{
 		try
@@ -244,6 +286,8 @@ public class CommonActions
 		}
 		//StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
 	}
+	
+	
 	
 	}
 

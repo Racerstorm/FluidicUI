@@ -4,12 +4,14 @@ import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import Storage.StorageVariables;
 import logger.Logger;
 import testStartup.LaunchBrowser;
+import actions.PageActions;
 
 public class CustomActions 
 {
@@ -124,6 +126,20 @@ public class CustomActions
 	    
 	}
 	
+	public static void getCSSvalues()
+	{
+		LaunchBrowser.splitTarget(StorageVariables.Target);
+		WebElement element = StorageVariables.driver.findElement(StorageVariables.by);
+		String fontSize = element.getCssValue("font-size");
+		String fontColor = element.getCssValue("color");
+	
+		
+		//Hover Color
+		Actions action = new Actions(StorageVariables.driver);
+	    action.moveToElement(element).perform();
+	    String hovercolor =  element.getCssValue("color");
+		
+	}
 	
 	
 public static void stepMessageOnPage() throws InterruptedException
@@ -207,6 +223,58 @@ public static void switchToIframe()
 	}
 	catch(Exception e) {
 		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Cannot switch to iframe");
+	}
+}
+
+public static void switchtoDefaultContent()
+{
+	try
+	{
+	StorageVariables.driver.switchTo().defaultContent();
+	}
+	
+	catch(Exception e)
+	{}
+}
+	
+
+public static void verifyElementandSkipSteps()
+{
+	int currentstep=StorageVariables.stepNumber;
+	String stepMessage="";
+	String currentAction="";
+	try
+	{
+	
+	LaunchBrowser.splitTarget(StorageVariables.Target);
+	if(!PageActions.isElementPresent())
+	{
+	  currentstep=StorageVariables.stepNumber;
+	  stepMessage="Element not found. <br>";
+	  //currentAction=StorageVariables.actions.get(currentstep);
+	  do
+	  {			
+		  stepMessage+="Skipping step : "+StorageVariables.actions.get(currentstep)+" "+StorageVariables.targets.get(currentstep)+" "+StorageVariables.values.get(currentstep)+"<br>";
+		  StorageVariables.actions.remove(currentstep);
+		  StorageVariables.targets.remove(currentstep);
+		  StorageVariables.values.remove(currentstep);
+		  currentAction=StorageVariables.actions.get(currentstep);
+		//  StorageVariables.stepNumber++;
+		  		 
+	  }
+	  
+	  while(!currentAction.toUpperCase().contains("END"));
+	  Logger.logwarning(stepMessage);
+	}
+	else
+	{
+		Logger.logsuccess("Element found on the page");
+	
+	}
+}
+	catch(Exception e)
+	{
+		e.printStackTrace();
 	}
 }
 

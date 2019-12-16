@@ -1,9 +1,12 @@
 package testStartup;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -28,12 +31,31 @@ public static void LaunchBrowser()
 	//	DesiredCapabilities capability=DesiredCapabilities.chrome();
 		System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
 		ChromeOptions options = new ChromeOptions();
+		
+		//Launch Canary
+		//options.setBinary("C:\\Users\\ust52622\\AppData\\Local\\Google\\Chrome SxS\\Application\\chrome.exe");
 		options.addArguments("--start-maximized");
 		options.addArguments("disable-infobars");
 		options.setExperimentalOption("useAutomationExtension", false); 
 		options.setExperimentalOption("excludeSwitches", Collections.singletonList("enable-automation"));
 		//options.addExtensions(new File("C:\\Automation\\Extensions\\extension_1_7.crx"));
+		//Mobile Automation
+		if(StorageVariables.mobileAutomation)
+		{
+			Map<String, Object> deviceMetrics = new HashMap<>();
+			deviceMetrics.put("width", 1078);
+			deviceMetrics.put("height", 924);
+			deviceMetrics.put("pixelRatio", 3.0);
+			Map<String, Object> mobileEmulation = new HashMap<>();
+			mobileEmulation.put("deviceMetrics", deviceMetrics);
+			mobileEmulation.put("userAgent", "Mozilla/5.0 (Linux; Android 8.0.0;" +"Pixel 2 XL Build/OPD1.170816.004) AppleWebKit/537.36 (KHTML,like Gecko) " +"Chrome/67.0.3396.99 Mobile Safari/537.36");
+			options.setExperimentalOption("mobileEmulation", mobileEmulation);
+
+		}
 		StorageVariables.driver = new ChromeDriver(options);
+		
+		
+		
 		}
 		
 		else if(StorageVariables.browser.equalsIgnoreCase("Firefox"))
@@ -57,6 +79,15 @@ public static void LaunchBrowser()
 			StorageVariables.driver=new InternetExplorerDriver(capabilities);
 			
 		}*/
+		
+		else if(StorageVariables.browser.equalsIgnoreCase("Edge"))
+		{
+			System.setProperty("webdriver.edge.driver","C:\\Automation\\WebDrivers\\MicrosoftWebDriver.exe");
+			StorageVariables.driver= new EdgeDriver();
+			StorageVariables.driver.manage().window().maximize();
+		}
+		
+		
 }       
         
 
@@ -107,6 +138,9 @@ public static void gotoAction()
 			case "SWITCHTOIFRAME" : CustomActions.switchToIframe();
 			    break;
 			    
+			case "SWITCHTODEFAULTCONTENT" : CustomActions.switchtoDefaultContent();
+		    break;
+			    
 			case "SLEEP" : PageActions.Sleep();
 		    break;
 			    
@@ -118,9 +152,24 @@ public static void gotoAction()
 			
 			case "SWITCHTOTAB": CommonActions.switchtoTab();
 			break;
+			
 			case "FILEUPLOAD": CommonActions.fileUpload();
 			break;
 			
+			case "VERIFYELEMENTANDSKIPSTEPS": CustomActions.verifyElementandSkipSteps();
+			break;
+			
+			case "VERIFYTEXT": PageActions.verifyText();
+			break;
+			
+			case "VERIFYELEMENTPRESENT": PageActions.verifyElementPresent();
+			break;
+			
+			case "VERIFYELEMENTNOTPRESENT": PageActions.verifyElementnotPresent();
+			break;
+			
+			case "SELECT": CommonActions.Select();
+			break;
 		}
 	}
 	catch(Exception e)
