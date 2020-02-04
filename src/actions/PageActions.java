@@ -57,10 +57,16 @@ public class PageActions
 		LaunchBrowser.splitTarget(StorageVariables.Target);
 		PageActions.highlightElement();
 		String text = StorageVariables.driver.findElement(StorageVariables.by).getText();
-		StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text :" + text;
+		StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text : " + text;
 		if(!text.isEmpty())
 		{
-			if(StorageVariables.Value.contains(text)) 
+			if(StorageVariables.Value.startsWith("$"))
+			{
+				StorageVariables.Value =  StorageVariables.Value.substring(1);
+			   StorageVariables.StoredVariables.get(StorageVariables.Value); //put(StorageVariables.Value, text);
+			}
+			
+			else if(text.contains(StorageVariables.Value)) 
 			{
 				  Logger.logsuccess("Expected and actual texts match"); 	
 			}
@@ -78,6 +84,26 @@ public class PageActions
 		}
 		
 		}
+	
+	public static void StoreText()
+	{
+		try
+		{
+			LaunchBrowser.splitTarget(StorageVariables.Target);
+			PageActions.highlightElement();
+			String text = StorageVariables.driver.findElement(StorageVariables.by).getText();
+			StorageVariables.StoredVariables.put(StorageVariables.Value, text);
+			//StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text :" + text;
+			//StorageVariables.localVar=text;
+			
+			 Logger.logsuccess("Text stored into a variable");
+		}
+		
+		catch(Exception e)
+		{
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
+		}
+	}
 	
 	public static void waitForPageLoad() 
 	{
@@ -137,11 +163,12 @@ public class PageActions
 	public static void waitforElement() 
 	{
 		LaunchBrowser.splitTarget(StorageVariables.Target);
+		PageActions.waitForJStoLoad();
 		
 	try
-	 {
+	 {		
 		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
-		wait.until(ExpectedConditions.visibilityOfElementLocated(StorageVariables.by));
+		wait.until(ExpectedConditions.elementToBeClickable(StorageVariables.by));
 		//Logger.logmessage("Element found on the page.");
 	    StorageVariables.stepLog="Element found on the page.";
 	 }
@@ -180,6 +207,20 @@ public class PageActions
 		catch(Exception e)
 		{}
 		 }
+	
+	 public static void unhighlightLast()
+	 { 
+		 try
+		 {
+		  StorageVariables.highlightedElement=StorageVariables.driver.findElement(StorageVariables.by);
+		  JavascriptExecutor js=(JavascriptExecutor) StorageVariables.driver;
+		  js.executeScript("arguments[0].style.border='0px'", StorageVariables.highlightedElement);
+		 }
+		 
+		 catch(Exception e)
+		 {}
+		 
+		 }
 
     public static boolean isElementPresent() 
 	     {
@@ -199,14 +240,14 @@ public class PageActions
 	    		//Logger.logwarning("Element is not present\n");
 	    	  }
 	    	  
-	    	  StorageVariables.driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
+	    	  //StorageVariables.driver.manage().timeouts().implicitlyWait(20, TimeUnit.SECONDS);
 	    	  return elementPresence;
 	     
 	     }
     
     public static void verifyElementPresent()
     {
-    
+    	LaunchBrowser.splitTarget(StorageVariables.Target);
     	try
     	{
     	if(isElementPresent())
@@ -250,6 +291,35 @@ public class PageActions
     	}
     	
     }
+    
+    public static void RefreshPage()
+    {
+    	try
+    	{
+    	StorageVariables.driver.navigate().refresh();
+    	Logger.logsuccess("Page refresh successful");
+    	}
+    	
+    	catch(Exception e)
+    	{}
+    	
+    }
+    
+    public static void GotoPreviousPage()
+    {
+    	try
+    	{
+    		StorageVariables.stepLog="Current on  : "+StorageVariables.driver.getTitle();
+    		StorageVariables.driver.navigate().back();
+        	Logger.logsuccess("Navigated successfully to the previous page : "+StorageVariables.driver.getTitle());
+    	}
+    	
+    	catch(Exception ex)
+    	{
+    		Logger.logerror("Unable to go to the previous page due to the exception : "+ex);
+    	}
+    }
+    
 	public static void Sleep()
 	{
 		long sleepTime = Integer.parseInt(StorageVariables.Value);

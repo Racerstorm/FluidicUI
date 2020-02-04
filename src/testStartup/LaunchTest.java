@@ -3,6 +3,9 @@ import org.testng.annotations.Test;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Properties;
 
 import org.testng.ITestResult;
@@ -10,7 +13,6 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Parameters;
-import org.testng.annotations.Test;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
@@ -25,18 +27,21 @@ import readCSV.ReadCSV;
 @Test
 
 public class LaunchTest {
-  
+ 
 	ExtentReports extent;
 	
   @BeforeTest
 //  @Parameters("browser")
-  @Parameters({ "browser", "mobileautomation" })
+  @Parameters({ "browser", "mobileautomation","filename" })
 
-  public void Setup(String browser,boolean mobileautomation) 
+  public void Setup(String browser,boolean mobileautomation,String filename) 
   {
 	  Logger.logmessage("Reading steps from the input file");
 	  StorageVariables.testdataSource="csv";
-	//Read test case steps from CSV file.
+	  StorageVariables.inputFile=filename;
+	  StorageVariables.inputFile+=".csv";
+
+	  //Read test case steps from CSV file.
 			try
 			{
 				if(StorageVariables.testdataSource.equalsIgnoreCase("DB"))
@@ -65,8 +70,10 @@ public class LaunchTest {
 		    Logger.logmessage("Browser : "+StorageVariables.browser);
 			LaunchBrowser.LaunchBrowser();	
 			
-			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+"TestReport.html",false);
-			StorageVariables.test = StorageVariables.report.startTest("Automation Test");
+			DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); 
+			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+"TestReport" +df.format(new Date())+".html",false);
+			StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf('.'));
+			StorageVariables.test = StorageVariables.report.startTest(StorageVariables.file);
   }
 
   @Test
@@ -84,6 +91,7 @@ public class LaunchTest {
       	LaunchBrowser.gotoAction();
       	//Logger.logmessage("\nCompleted Step "+StorageVariables.stepNumber+": "+StorageVariables.Action+"");
         StorageVariables.stepLog="";
+        PageActions.unhighlightLast();
       }
 	  
   }
@@ -123,8 +131,11 @@ public class LaunchTest {
         }
            try
            {
-	        StorageVariables.driver.close();
-	        StorageVariables.driver.quit();
+        	StorageVariables.actions.clear();
+        	StorageVariables.targets.clear();
+        	StorageVariables.values.clear();
+	     //   StorageVariables.driver.close();
+	       // StorageVariables.driver.quit();
            }
            catch(Exception e)
            {}

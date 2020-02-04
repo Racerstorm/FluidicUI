@@ -1,8 +1,12 @@
 package actions;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import Storage.StorageVariables;
 import testStartup.LaunchBrowser;
@@ -12,7 +16,10 @@ import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.KeyEvent;
-import org.openqa.selenium.support.ui.Select;  
+
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
+import org.openqa.selenium.support.ui.WebDriverWait;  
 
 public class CommonActions
 {
@@ -23,11 +30,14 @@ public class CommonActions
 		{
 			StorageVariables.stepLog="Launching the URL : "+StorageVariables.Value;
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
-			if(StorageVariables.driver.getTitle().contains("503"))
+			if(StorageVariables.driver.getTitle().startsWith("50"))
 			{
 			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed as the URL could not be opened.");
 
 			}
+			
+			Logger.logsuccess("Open action was performed successfully.");
+			PageActions.waitForPageLoad();
 		}
 		
 		catch(Exception e)
@@ -45,9 +55,11 @@ public class CommonActions
     	 LaunchBrowser.splitTarget(StorageVariables.Target);
     	 PageActions.waitforElement();
     	 PageActions.highlightElement();
+    	 StorageVariables.driver.manage().timeouts().implicitlyWait(2, TimeUnit.SECONDS);
     	 StorageVariables.stepLog+="<br>Clicking the element :";
     	 StorageVariables.driver.findElement(StorageVariables.by).click();
     	 Logger.logsuccess("Click action was performed successfully.");	
+    	 PageActions.waitForPageLoad();
     	     	 
      }
           
@@ -55,6 +67,7 @@ public class CommonActions
      {   
     	 try
     	 {
+    		 StorageVariables.element=StorageVariables.driver.findElement(StorageVariables.by);
     		 ((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
     		 
     	 }
@@ -137,30 +150,40 @@ public class CommonActions
 	{
 		try
 		{
-			
+		
+		StorageVariables.driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 		String hoverElement = StorageVariables.Target.split("\\#")[0]; 
 		String elementtobeClicked = StorageVariables.Target.split("\\#")[1]; 
 		
 		LaunchBrowser.splitTarget(hoverElement);
 		WebElement hover=StorageVariables.driver.findElement(StorageVariables.by);
 		
+		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
+		wait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
+		
 		LaunchBrowser.splitTarget(elementtobeClicked);
 		WebElement clickElement = StorageVariables.driver.findElement(StorageVariables.by); 
+		//wait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
 		
 		Actions actions = new Actions(StorageVariables.driver);
 		
 		//WebElement menu = driver.findElement(by); 
 		
+		
+		
 		actions.moveToElement(hover).build().perform();
 		//Thread.sleep(2000);
+		wait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
 		actions.moveToElement(clickElement).click().build().perform();
 		PageActions.waitForPageLoad();
 		Logger.logsuccess("Hovered on the element and performed the click action successfully.");
 		}
 		catch(Exception m)
 		{   
-			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+m+" The action was not performed.");
+	       Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+m+" The action was not performed.");
+	       
 		}
+	
 
 	}
 
@@ -169,16 +192,86 @@ public class CommonActions
 		try
 		{
 		LaunchBrowser.splitTarget(StorageVariables.Target);
+		
 		PageActions.highlightElement();
+		WebDriverWait driverwait = new WebDriverWait(StorageVariables.driver, 10);
+		driverwait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
+		
 		StorageVariables.driver.findElement(StorageVariables.by).clear();
+		
+		if(StorageVariables.Value.startsWith("$"))
+		{
+		  StorageVariables.Value.replace("$", "");
+		  StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.StoredVariables.get(StorageVariables.Value));
+		}
+		
+		else
+		{
 		StorageVariables.driver.findElement(StorageVariables.by).sendKeys(StorageVariables.Value);
+		}
+		
 		Logger.logsuccess("Located the element and performed the type action successfully");
 		}
+		
 		catch(Exception e)
 		{
 			 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Type action was not performed.");
 		}
 	}
+	
+	
+	public static void TypeCharacters()
+	{
+		try
+		{
+			    LaunchBrowser.splitTarget(StorageVariables.Target);
+			    String val = StorageVariables.Value; 
+			    WebElement element = StorageVariables.driver.findElement(StorageVariables.by);
+			    element.clear();
+
+			    for (int i = 0; i < val.length(); i++)
+			    {
+			        char c = val.charAt(i);
+			        String s = new StringBuilder().append(c).toString();
+			        element.sendKeys(s);
+			    }       
+			
+		}
+		
+		catch(Exception e)
+		{
+			
+		}
+		
+		
+	}
+	
+	public static void typeAction()
+	{
+		
+		try
+		{	
+			LaunchBrowser.splitTarget(StorageVariables.Target);
+			WebElement actionelement = StorageVariables.driver.findElement(StorageVariables.by);
+			Actions builder = new Actions(StorageVariables.driver);
+			Action seriesOfActions = builder
+				.moveToElement(actionelement)
+				.click()
+				
+				.sendKeys(actionelement, StorageVariables.Value)
+				
+				.build();
+			
+			seriesOfActions.perform();
+			Thread.sleep(2000);
+		}
+		
+		catch(Exception e)
+		{
+		
+		}
+	}
+	
 	
 	public static void Select()
 	{
@@ -207,7 +300,7 @@ public class CommonActions
 						dropdown.selectByIndex(dropdownValue);
 					break;
 					
-					case "VALUE":
+					case "VALUE":	
 						dropdown.selectByValue(dropdownvalue);
 						break;
 						
@@ -221,6 +314,22 @@ public class CommonActions
 		  
 	}
 	
+	public static void OpenNewTab()
+	{
+	 try
+	 {
+		 ((JavascriptExecutor)StorageVariables.driver).executeScript("window.open()");
+		 ArrayList<String> tabs = new ArrayList<String>(StorageVariables.driver.getWindowHandles());
+		 StorageVariables.driver.switchTo().window(tabs.get(1));
+		// StorageVariables.driver.get("http://google.com"); 
+	 }
+	 
+	 catch(Exception ex)
+	 {
+	 
+	 }
+	}
+	
 	public static void switchtoTab()
 	{
 		try
@@ -228,15 +337,23 @@ public class CommonActions
 		// Store all currently open tabs in tabs
 		ArrayList<String> tabs = new ArrayList<String> (StorageVariables.driver.getWindowHandles());
 
+		 if(StorageVariables.Value.equalsIgnoreCase("DEFAULT")|| StorageVariables.Value.contentEquals("0"))
+	        {
+	        	//Switch to old(Parent) tab.
+		     StorageVariables.driver.switchTo().window(tabs.get(0));
+	        }
+		 else
+		 {
 		// Switch newly open Tab
 		StorageVariables.driver.switchTo().window(tabs.get(Integer.parseInt(StorageVariables.Value)));
+		 }
         Logger.logsuccess("Switched to tab : "+StorageVariables.Value+" successfully. ");
 		//Close newly open tab after performing some operations.
 		//StorageVariables.driver.close();
 
-		//Switch to old(Parent) tab.
-	   //StorageVariables.driver.switchTo().window(tabs.get(0));
-		
+       
+        Logger.logsuccess("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" was performed.");
+        
 	}
 		catch(Exception e)
 		{
@@ -249,6 +366,12 @@ public class CommonActions
 	{
 		try
 		{
+		if(!StorageVariables.Target.equalsIgnoreCase("BLANK"))
+		{
+		 LaunchBrowser.splitTarget(StorageVariables.Target);
+		 StorageVariables.driver.findElement(StorageVariables.by).click();
+		}
+		 
 	/*	//File upload button
 		String upload = StorageVariables.Target.split("\\#")[0]; 
 		LaunchBrowser.splitTarget(upload);
@@ -267,11 +390,14 @@ public class CommonActions
 			Toolkit.getDefaultToolkit().getSystemClipboard().setContents(stringSelection, null);
 			
 			Robot WindowsDriver = new Robot();
+			Thread.sleep(3000);
+			WindowsDriver.keyPress(KeyEvent.VK_ENTER);
+			Thread.sleep(3000);
 			WindowsDriver.keyPress(KeyEvent.VK_CONTROL);
 			WindowsDriver.keyPress(KeyEvent.VK_V);
 			WindowsDriver.keyRelease(KeyEvent.VK_V);
 			WindowsDriver.keyRelease(KeyEvent.VK_CONTROL);
-			Thread.sleep(3000);
+			Thread.sleep(1000);
 			WindowsDriver.keyPress(KeyEvent.VK_ENTER);
 			WindowsDriver.keyRelease(KeyEvent.VK_ENTER);
 			

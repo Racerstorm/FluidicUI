@@ -25,7 +25,12 @@ public class LaunchBrowser {
 @BeforeTest
 public static void LaunchBrowser()
 {
-		if(StorageVariables.browser.equalsIgnoreCase("Chrome"))
+		
+	try
+	{
+		
+	
+	   if(StorageVariables.browser.equalsIgnoreCase("Chrome"))
 		{
 		StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
 	//	DesiredCapabilities capability=DesiredCapabilities.chrome();
@@ -86,7 +91,9 @@ public static void LaunchBrowser()
 			StorageVariables.driver= new EdgeDriver();
 			StorageVariables.driver.manage().window().maximize();
 		}
-		
+	}
+	catch(Exception webdriver)
+	{}
 		
 }       
         
@@ -150,6 +157,9 @@ public static void gotoAction()
 			case "GETELEMENTSTYLE": CustomActions.getElementStyle();
 			break;
 			
+			case "OPENNEWTAB": CommonActions.OpenNewTab();
+			break;
+			
 			case "SWITCHTOTAB": CommonActions.switchtoTab();
 			break;
 			
@@ -157,6 +167,9 @@ public static void gotoAction()
 			break;
 			
 			case "VERIFYELEMENTANDSKIPSTEPS": CustomActions.verifyElementandSkipSteps();
+			break;
+			
+			case "STORETEXT": PageActions.StoreText();
 			break;
 			
 			case "VERIFYTEXT": PageActions.verifyText();
@@ -168,8 +181,20 @@ public static void gotoAction()
 			case "VERIFYELEMENTNOTPRESENT": PageActions.verifyElementnotPresent();
 			break;
 			
+			case "REFRESHPAGE": PageActions.RefreshPage();
+			break;
+			
 			case "SELECT": CommonActions.Select();
 			break;
+			
+			case "TYPECHARACTERS": CommonActions.TypeCharacters();
+			break;
+			
+			case "TYPEACTION": CommonActions.typeAction();
+			break;
+			
+			case "GOTOPREVIOUSPAGE": PageActions.GotoPreviousPage();
+			break;			
 		}
 	}
 	catch(Exception e)

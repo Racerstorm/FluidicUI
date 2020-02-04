@@ -19,11 +19,16 @@ public class ReadCSV {
 
 	  for (File file : listOfFiles) {
 	      if (file.isFile()) {
-	          	StorageVariables.file=file.getName();
-	          StorageVariables.csvLocation=folder+"\\"+StorageVariables.file;
-	          if (StorageVariables.file.indexOf(".") > 0)
-	        	  StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf("."));
-	         // return fileName;
+	    	    String tempfile=file.getName();
+	          //	StorageVariables.file=file.getName();
+	          	if(tempfile.equalsIgnoreCase(StorageVariables.inputFile))
+	          	{
+	          		StorageVariables.file=tempfile;
+	          		StorageVariables.csvLocation=folder+"\\"+tempfile;
+	          		if (tempfile.indexOf(".") > 0)
+	          			tempfile = tempfile.substring(0, tempfile.lastIndexOf("."));
+	          		// return fileName;
+	          	}
 	      }
 	  }
 	 

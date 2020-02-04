@@ -144,7 +144,7 @@ public class CustomActions
 	
 public static void stepMessageOnPage() throws InterruptedException
 {
-	try {
+	/*try {
 		StorageVariables.jse=(JavascriptExecutor)StorageVariables.driver;
 	// Check for jQuery on the page, add it if need be
 			StorageVariables.jse.executeScript("if (!window.jQuery) {"
@@ -205,7 +205,7 @@ public static void stepMessageOnPage() throws InterruptedException
 	catch(Exception e)
 	{
 		System.out.println("Exception is "+e);
-	}
+	}*/
 	
 }
 
@@ -219,7 +219,8 @@ public static void switchToIframe()
 		PageActions.highlightElement();
 		WebElement frame = StorageVariables.driver.findElement(StorageVariables.by);
 		StorageVariables.driver.switchTo().frame(frame);
-	    Logger.logsuccess("Switched to iframe successfully.");			
+	    Logger.logsuccess("Switched to iframe successfully.");		
+	  
 	}
 	catch(Exception e) {
 		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Cannot switch to iframe");
@@ -230,6 +231,7 @@ public static void switchtoDefaultContent()
 {
 	try
 	{
+	StorageVariables.driver.switchTo().parentFrame();
 	StorageVariables.driver.switchTo().defaultContent();
 	}
 	

@@ -2,12 +2,14 @@ package Storage;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import com.relevantcodes.extentreports.ExtentReports;
 import com.relevantcodes.extentreports.ExtentTest;
@@ -27,12 +29,15 @@ public class StorageVariables {
 	public static ArrayList<String> actions = new ArrayList<String>();
 	public static ArrayList<String> targets = new ArrayList<String>();
 	public static ArrayList<String> values = new ArrayList<String>();
+	public static HashMap<String,String> StoredVariables=new HashMap<String,String>();    
 	public static String file = "";
+	public static String inputFile="";
 	public static String testdataSource="";
 	public static String csvLocation = "";
 	public static char delimiter;
+	public static String localVar="";
 	public static WebElement highlightedElement=null;
-	
+		
 	
 	public static WebElement element = null;
 	public static By by = null;
