@@ -30,8 +30,7 @@ public class Logger
 		}
 		}
 		StorageVariables.stepLog="";
-		
-	}
+		}
 	
 	public static void logmessage(String log) 
 	{
