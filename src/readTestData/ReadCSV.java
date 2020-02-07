@@ -35,7 +35,7 @@ public class ReadCSV {
 	  
 	 //csvLocation="D:\\eclipse-workspace\\Test.csv";
 	//public OutputFormatter output;
-	//List<String[]> actions;
+	
 	  
         try
        /* (FileInputStream fis = new FileInputStream(csvLocation);

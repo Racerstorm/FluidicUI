@@ -84,7 +84,7 @@ public class ReadExcel
         	 if(type.equalsIgnoreCase("NUMERIC"))
         	 {
         		 
-        		// DataFormatter formatter = new DataFormatter(); //creating formatter using the default locale
+        		// DataFormatter formatter = new DataFormatter();
         		 //Cell cell = row.getCell(j);
         		 System.out.print(cellval+"|| ");
         		 double temp = row.getCell(j).getNumericCellValue();
