@@ -1,4 +1,5 @@
-/*import java.io.File;
+package readTestData;
+import java.io.File;
 
 import java.io.FileInputStream;
 
@@ -17,10 +18,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import Storage.StorageVariables;
 
-public class ReadExcel {
-	
-	public static void readFromExcel()
-	{
+public class ReadExcel 
+{
 
 	public String cellval="";
 	
@@ -42,7 +41,8 @@ public class ReadExcel {
 
     //Check condition if the file is xlsx file
 
-    if(fileExtensionName.equals(".xlsx")){
+    if(fileExtensionName.equals(".xlsx"))
+    {
 
     //If it is xlsx file then create object of XSSFWorkbook class
 
@@ -52,7 +52,8 @@ public class ReadExcel {
 
     //Check condition if the file is xls file
 
-    else if(fileExtensionName.equals(".xls")){
+    else if(fileExtensionName.equals(".xls"))
+    {
 
         //If it is xls file then create object of HSSFWorkbook class
 
@@ -82,14 +83,13 @@ public class ReadExcel {
         	 
         	 if(type.equalsIgnoreCase("NUMERIC"))
         	 {
+        		 
         		// DataFormatter formatter = new DataFormatter(); //creating formatter using the default locale
         		 //Cell cell = row.getCell(j);
         		 System.out.print(cellval+"|| ");
         		 double temp = row.getCell(j).getNumericCellValue();
         		 int cellvalue = (int)temp;
-        		 cellval = Double.toString(cellvalue);
-        		
-        		
+        		 cellval=Integer.toString(cellvalue);  
         		 
         	 }
         	 
@@ -117,25 +117,8 @@ public class ReadExcel {
         System.out.println();
     } 
 
-    }  
-
-    //Main function is calling readExcel function to read data from excel file
-
-    public static void main(String...strings) throws IOException{
-
-    //Create an object of ExcelFile class
-
-    ReadExcel objExcelFile = new ReadExcel();
-
-    //Prepare the path of excel file
-
-    String filePath = "C:/Automation/TestData";
-
-    //Call read file method of the class to read data
-
-    objExcelFile.readExcel(filePath,"Globe_Stage_StartConversation.xlsx","Worksheet");
+ 
 
     }
-	}
+
 }
-*/

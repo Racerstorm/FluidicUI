@@ -37,7 +37,8 @@ public class StorageVariables {
 	public static char delimiter;
 	public static String localVar="";
 	public static WebElement highlightedElement=null;
-		
+	public static String testdataPath = "C:/Automation/TestData";	
+	public static String testcaseSheet="";
 	
 	public static WebElement element = null;
 	public static By by = null;

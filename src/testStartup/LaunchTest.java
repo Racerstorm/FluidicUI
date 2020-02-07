@@ -22,7 +22,8 @@ import DBOperations.StepsfromDB;
 import Storage.StorageVariables;
 import actions.PageActions;
 import logger.Logger;
-import readCSV.ReadCSV;
+import readTestData.ReadCSV;
+import readTestData.ReadExcel;
 
 @Test
 
@@ -32,14 +33,15 @@ public class LaunchTest {
 	
   @BeforeTest
 //  @Parameters("browser")
-  @Parameters({ "browser", "mobileautomation","filename" })
+  @Parameters({ "browser", "mobileautomation","datasource","filename","TCsheet"})
 
-  public void Setup(String browser,boolean mobileautomation,String filename) 
+  public void Setup(String browser,boolean mobileautomation,String datasource,String filename,String TCsheet) 
   {
 	  Logger.logmessage("Reading steps from the input file");
-	  StorageVariables.testdataSource="csv";
+	  StorageVariables.testdataSource=datasource;
 	  StorageVariables.inputFile=filename;
-	  StorageVariables.inputFile+=".csv";
+	  StorageVariables.testcaseSheet=TCsheet;
+	  
 
 	  //Read test case steps from CSV file.
 			try
@@ -52,7 +54,19 @@ public class LaunchTest {
 				
 				else if(StorageVariables.testdataSource.equalsIgnoreCase("csv"))
 				{
+				  StorageVariables.inputFile+=".csv";
 				  ReadCSV.readfromCSV();
+				}
+				
+				else if(StorageVariables.testdataSource.equalsIgnoreCase("excel"))
+				{
+					readTestData.ReadExcel objExcelFile = new ReadExcel();
+					//String filePath = "C:/Automation/TestData";
+
+
+				    //Call read file method of the class to read data
+				    objExcelFile.readExcel(StorageVariables.testdataPath,StorageVariables.inputFile,StorageVariables.testcaseSheet);
+
 				}
 		    }
 			
@@ -66,14 +80,14 @@ public class LaunchTest {
 			StorageVariables.browser=browser;	
 			StorageVariables.mobileAutomation=mobileautomation;
 			StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\";
-			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\File";
+			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\";
 		    Logger.logmessage("Browser : "+StorageVariables.browser);
 			LaunchBrowser.LaunchBrowser();	
 			
 			DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); 
-			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+"TestReport" +df.format(new Date())+".html",false);
-			StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf('.'));
-			StorageVariables.test = StorageVariables.report.startTest(StorageVariables.file);
+			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+StorageVariables.testcaseSheet+" TestReport" +df.format(new Date())+".html",false);
+//			StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf('.'));
+			StorageVariables.test = StorageVariables.report.startTest(StorageVariables.testcaseSheet);
   }
 
   @Test
@@ -134,8 +148,8 @@ public class LaunchTest {
         	StorageVariables.actions.clear();
         	StorageVariables.targets.clear();
         	StorageVariables.values.clear();
-	     //   StorageVariables.driver.close();
-	       // StorageVariables.driver.quit();
+        	StorageVariables.driver.close();
+        	StorageVariables.driver.quit();
            }
            catch(Exception e)
            {}
