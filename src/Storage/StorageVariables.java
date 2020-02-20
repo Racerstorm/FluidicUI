@@ -39,7 +39,7 @@ public class StorageVariables {
 	public static WebElement highlightedElement=null;
 	public static String testdataPath = "C:/Automation/TestData";	
 	public static String testcaseSheet="";
-	
+		
 	public static WebElement element = null;
 	public static By by = null;
 	public static String tempStorage="";
@@ -48,6 +48,8 @@ public class StorageVariables {
 	public static String screenshotFile="";
 	public static boolean ParallelExecution;
 	public static boolean mobileAutomation=false;
+	
+	public static long startTime;
 	
 	public static String stepLog="";
 	public static List<String> stepsLogs= new ArrayList<String>();

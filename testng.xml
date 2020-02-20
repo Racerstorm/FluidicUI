@@ -6,21 +6,11 @@
    <parameter name = "mobileautomation" value="false"/>
    <parameter name = "datasource" value="excel"/>  
     <parameter name = "filename" value="Testcases.xlsx"/>
-    <parameter name = "TCsheet" value="Globe_Stage_StartConversation"/>
+    <parameter name = "TCsheet" value="Globe_Stage_ProfilePage"/>
     <classes>
       <class name="testStartup.LaunchTest"/>
       </classes>
-  </test> <!-- Test -->
-  
-  <test  name="testtwo">
-   <parameter name = "browser" value="Chrome"/>
-   <parameter name = "mobileautomation" value="false"/>
-   <parameter name = "datasource" value="excel"/>  
-    <parameter name = "filename" value="Testcases.xlsx"/>
-    <parameter name = "TCsheet" value="Globe_Stage_ComposeMessage"/>
-    <classes>
-      <class name="testStartup.LaunchTest"/>
-      </classes>
+
   </test> <!-- Test -->
   
        

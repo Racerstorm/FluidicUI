@@ -127,6 +127,9 @@ public static void gotoAction()
 			case "TYPE" : CommonActions.Type();
 				break;
 				
+			case "GENERATERANDOMSTRING": CustomActions.generateRandomString();
+			break;
+				
 			case "WAITFORPAGELOAD" : PageActions.waitForPageLoad();
 				break;
 				
@@ -194,7 +197,13 @@ public static void gotoAction()
 			break;
 			
 			case "GOTOPREVIOUSPAGE": PageActions.GotoPreviousPage();
-			break;			
+			break;		
+			
+			case "MODIFYXPATH": CustomActions.modifyxpath();
+			break;	
+			
+			case "CLICKMULTIPLELINKS": CustomActions.ClickMultipleLinks();	
+			break;	
 		}   
 		
 	}

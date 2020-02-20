@@ -19,7 +19,7 @@ public class Logger
 		if(StorageVariables.stepNumber>0)
 		{
 			StorageVariables.test.log(LogStatus.PASS,"Executing Step : "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+""
-		    +"<br>"+StorageVariables.Target+"<br>"+StorageVariables.Value+"<br>"+StorageVariables.stepLog+"<br>"+log+"<br>Step passed : "+StorageVariables.Action);
+		    +"<br>"+"Locator is : "+StorageVariables.Target+"<br> Value is : "+StorageVariables.Value+"<br>"+StorageVariables.stepLog+"<br>"+log+"<br>Step passed : "+StorageVariables.Action);
 			
 		try {
 			StorageVariables.messageType="success";
@@ -51,7 +51,7 @@ public class Logger
 		PageActions.TakeSreenshot();
 		if(!StorageVariables.Action.isEmpty())
 		{   
-			StorageVariables.test.log(LogStatus.WARNING,"Executing Step : "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+""
+			StorageVariables.test.log(LogStatus.WARNING,"Executing Step : "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+""+"Locator is : "+StorageVariables.Action
 				    +"<br>"+StorageVariables.stepLog+"<br>"+log+"<br>Step failed with warning, but the test case will continue : "+StorageVariables.Action+"<br>"+StorageVariables.test.addScreenCapture(StorageVariables.screenshotFile));
 					
 	//	StorageVariables.test.log(LogStatus.WARNING, "\nStep failed with warning, but the test case will continue : "+StorageVariables.Action);

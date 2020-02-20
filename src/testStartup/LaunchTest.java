@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
+import org.glassfish.jersey.internal.guava.Stopwatch;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
@@ -83,15 +84,17 @@ public class LaunchTest {
 			StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\";
 			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\";
 		    Logger.logmessage("Browser : "+StorageVariables.browser);
+		 //   StorageVariables.startTime = System.nanoTime();
 			LaunchBrowser.LaunchBrowser();	
 			
 			DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); 
 			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+StorageVariables.testcaseSheet+" TestReport" +df.format(new Date())+".html",false);
 //			StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf('.'));
 			StorageVariables.test = StorageVariables.report.startTest(StorageVariables.testcaseSheet);
+			StorageVariables.warningCounter=0;
   }
 
-  @Test
+  @Test //(invocationCount = 5)
   public  void Start()
   {
 	  
@@ -144,6 +147,8 @@ public class LaunchTest {
         	Logger.logmessage("Testcase failed with error(s)");
         	
         }
+	//    long finishTime = System.nanoTime();
+	  //  long timeElapsed = finish - startTime;
            try
            {
         	StorageVariables.actions.clear();
@@ -151,6 +156,10 @@ public class LaunchTest {
         	StorageVariables.values.clear();
         	StorageVariables.driver.close();
         	StorageVariables.driver.quit();
+        	if(StorageVariables.browser.equalsIgnoreCase("Chrome"))
+        	{
+        		Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe /T");
+        	}
            }
            catch(Exception e)
            {}

@@ -22,10 +22,15 @@ public class ReadExcel
 {
 
 	public String cellval="";
+	String type="";
+	int cell_row,cell_column;
 	
     public void readExcel(String filePath,String fileName,String sheetName) throws IOException{
 
     //Create an object of File class to open xlsx file
+    try
+    {
+  	  	
 
     File file =    new File(filePath+"\\"+fileName);
 
@@ -71,23 +76,26 @@ public class ReadExcel
 
     //Create a loop over all the rows of excel file to read it
 
-    for (int i = 1; i < rowCount+1; i++) {
+    for (cell_row = 1; cell_row < rowCount+1; cell_row++) {
 
-        Row row = TestSheet.getRow(i);
+        Row row = TestSheet.getRow(cell_row);
         //Create a loop to print cell values in a row
+        int var=row.getLastCellNum();
 
-        for (int j = 0; j < row.getLastCellNum(); j++) {
+        for (int cell_column = 0; cell_column < row.getLastCellNum(); cell_column++) {
 
             //Print Excel data in console
-        	 String type = row.getCell(j).getCellType().toString();
-        	 
+        	
+        	  type = row.getCell(cell_column).getCellType().toString();
+        	        	
+        	
         	 if(type.equalsIgnoreCase("NUMERIC"))
         	 {
         		 
         		// DataFormatter formatter = new DataFormatter();
         		 //Cell cell = row.getCell(j);
         		 System.out.print(cellval+"|| ");
-        		 double temp = row.getCell(j).getNumericCellValue();
+        		 double temp = row.getCell(cell_column).getNumericCellValue();
         		 int cellvalue = (int)temp;
         		 cellval=Integer.toString(cellvalue);  
         		 
@@ -96,11 +104,11 @@ public class ReadExcel
         	 
         	 else
         	 {
-        		 System.out.print(row.getCell(j).getStringCellValue()+"|| ");
-        		 cellval=row.getCell(j).getStringCellValue();
+        		 System.out.print(row.getCell(cell_column).getStringCellValue()+"|| ");
+        		 cellval=row.getCell(cell_column).getStringCellValue();
         	 }
         	 
-        	 switch(j) 
+        	 switch(cell_column) 
         	 {
         	 case 0: 
                  StorageVariables.actions.add(cellval); 
@@ -117,7 +125,30 @@ public class ReadExcel
 
         System.out.println();
     } 
+    }
+    
+    catch(Exception ex)
+	{
+	  if(ex.toString().equalsIgnoreCase("java.lang.NullPointerException"))
+		{
+		  cell_column+=cell_column;
+		  switch(cell_column) 
+     	 {
+     	 case 0: 
+              StorageVariables.actions.add("BLANK"); 
+              break; 
+          case 1: 
+         	 StorageVariables.targets.add("BLANK");
+              break; 
+          case 2: 
+         	 StorageVariables.values.add("BLANK");
+         	 break;
+     	 }
 
+		  
+		 }
+	  	
+	}
  
 
     }

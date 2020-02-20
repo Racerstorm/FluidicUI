@@ -1,5 +1,9 @@
 package actions;
 
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
+
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -141,6 +145,68 @@ public class CustomActions
 		
 	}
 	
+	public static void generateRandomString()
+     {
+        try
+        {
+        LaunchBrowser.splitTarget(StorageVariables.Target);
+        int count = 5;
+        String variableName = "RandomVar";
+        if(StorageVariables.Value.contains("|"))
+        {
+        count = Integer.parseInt(StorageVariables.Value.split("\\|")[0]); 
+		variableName = StorageVariables.Value.split("\\|")[1];
+        }
+        
+		String alphanumericstring = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder randomstring = new StringBuilder();
+        Random rnd = new Random();
+        
+        while (randomstring.length() < count)
+        { // length of the random string.
+            int index = (int) (rnd.nextFloat() * alphanumericstring.length());
+            randomstring.append(alphanumericstring.charAt(index));
+        }
+        
+        String randomString = randomstring.toString();
+        
+        StorageVariables.stepLog+="<br>Random string is : "+randomString;
+        
+        //StorageVariables.Value= randomString;
+        StorageVariables.driver.findElement(StorageVariables.by).sendKeys(randomString);
+        
+        Logger.logsuccess("Random string was successfully generated.");
+        
+        StorageVariables.StoredVariables.put(variableName,randomString); //put(StorageVariables.Value, text);
+        }
+        
+        catch(Exception ex)
+        {
+        	 Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+ex+" Random String could not be generated.");
+        }
+
+    }
+	
+	 public static void modifyxpath()
+	 {
+	  
+		 try
+		 {
+		  StorageVariables.Target.replace("param", StorageVariables.StoredVariables.get(StorageVariables.Value));
+		  LaunchBrowser.splitTarget(StorageVariables.Target);
+		  StorageVariables.driver.findElement(StorageVariables.by).click();
+		  
+		 }
+		 
+		 catch(Exception e)
+		 {
+			 
+		 }
+		 
+		 
+		 
+     }
+	
 	
 public static void stepMessageOnPage() throws InterruptedException
 {
@@ -233,14 +299,59 @@ public static void switchtoDefaultContent()
 	{
 	StorageVariables.driver.switchTo().parentFrame();
 	StorageVariables.driver.switchTo().defaultContent();
+	 Logger.logsuccess("Switched to default content successfully.");
 	}
 	
 	catch(Exception e)
-	{}
+	{
+		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Cannot switch back to default content");
+	}
 }
 
 
+
+public static void ClickMultipleLinks()
+{
+	try
+	{
+				
+		LaunchBrowser.splitTarget(StorageVariables.Target);
+		if(PageActions.isElementPresent())
+		{
+		List<WebElement> xpathofLinks = StorageVariables.driver.findElements(StorageVariables.by);
+		
+		for(WebElement xpath : xpathofLinks)
+		{
+			 LaunchBrowser.splitTarget(StorageVariables.Value);			
+			 String label  = StorageVariables.driver.findElement(StorageVariables.by).getText();
+			
+			 //StorageVariables.highlightedElement=StorageVariables.driver.findElement(StorageVariables.by);
+			 StorageVariables.jse = (JavascriptExecutor)StorageVariables.driver;
+		  StorageVariables.jse.executeScript("arguments[0].setAttribute('style', 'border: 2px solid red;');", xpath);
+			    
+			 xpath.click();
+			 Thread.sleep(1000);
+			
+			StorageVariables.stepLog+="<br>Clicked the link  "+label;
+			StorageVariables.jse.executeScript("arguments[0].style.border='0px'", xpath);
+			
+			
+		}
+		 Logger.logsuccess("Click action performed successfully on the links.");
+		}
+		
+		else
+		{
+			Logger.logwarning("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" Exiting as there are no links present");
+		}
+	}
 	
+	
+	catch(Exception ex)
+	{
+		Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+ex+" Cannot click multiple links");
+	}
+}
 
 public static void verifyElementandSkipSteps()
 {

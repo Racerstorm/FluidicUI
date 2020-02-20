@@ -8,6 +8,8 @@ import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.server.handler.ClickElement;
+
 import Storage.StorageVariables;
 import testStartup.LaunchBrowser;
 import logger.Logger;
@@ -30,7 +32,7 @@ public class CommonActions
 		{
 			StorageVariables.stepLog="Launching the URL : "+StorageVariables.Value;
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
-			if(StorageVariables.driver.getTitle().startsWith("50"))
+			if(StorageVariables.driver.getTitle().startsWith("500"))
 			{
 			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed as the URL could not be opened.");
 
@@ -44,6 +46,7 @@ public class CommonActions
 		{
 			StorageVariables.testcaseStatus=false;
 			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e);
+
 		}
 		
 	}
@@ -162,9 +165,11 @@ public class CommonActions
 		
 		WebDriverWait wait = new WebDriverWait(StorageVariables.driver, 20);
 		wait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
+		PageActions.highlightElement();
 		
 		LaunchBrowser.splitTarget(elementtobeClicked);
 		WebElement clickElement = StorageVariables.driver.findElement(StorageVariables.by); 
+		PageActions.highlightElement();
 		//wait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
 		
 		Actions actions = new Actions(StorageVariables.driver);
@@ -174,15 +179,28 @@ public class CommonActions
 		
 		
 		actions.moveToElement(hover).build().perform();
-		//Thread.sleep(2000);
+		
+		//mouseover.perform();
+		
+		Thread.sleep(1000);
 		wait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
-		actions.moveToElement(clickElement).click().build().perform();
+		clickElement.click();
+	//	actions.moveToElement(clickElement).click().build().perform();
 		PageActions.waitForPageLoad();
 		Logger.logsuccess("Hovered on the element and performed the click action successfully.");
 		}
 		catch(Exception m)
-		{   
-	       Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+m+" The action was not performed.");
+		{  
+			try		
+		{
+			WebElement clickElement = StorageVariables.driver.findElement(StorageVariables.by);
+			((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", clickElement);
+			Logger.logsuccess("Hovered on the element and performed the click action successfully.");
+		}
+			catch(Exception ex)
+			{		
+	          Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+m+" The action was not performed.");
+			}
 	       
 		}
 	
@@ -253,6 +271,10 @@ public class CommonActions
 		
 		try
 		{	
+			if(StorageVariables.browser.equalsIgnoreCase("Firefox"))
+			{
+				Thread.sleep(1500);
+			}
 			LaunchBrowser.splitTarget(StorageVariables.Target);
 			WebElement actionelement = StorageVariables.driver.findElement(StorageVariables.by);
 			Actions builder = new Actions(StorageVariables.driver);
@@ -266,11 +288,12 @@ public class CommonActions
 			
 			seriesOfActions.perform();
 			Thread.sleep(2000);
+			Logger.logsuccess("Type action was performed successfully.");
 		}
 		
 		catch(Exception e)
 		{
-		
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" TypeAction was not performed.");
 		}
 	}
 	

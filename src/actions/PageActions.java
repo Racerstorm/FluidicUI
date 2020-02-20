@@ -57,17 +57,31 @@ public class PageActions
 		LaunchBrowser.splitTarget(StorageVariables.Target);
 		PageActions.highlightElement();
 		String text = StorageVariables.driver.findElement(StorageVariables.by).getText();
-		StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text : " + text;
+		
 		if(!text.isEmpty())
 		{
 			if(StorageVariables.Value.startsWith("$"))
 			{
 				StorageVariables.Value =  StorageVariables.Value.substring(1);
-			   StorageVariables.StoredVariables.get(StorageVariables.Value); //put(StorageVariables.Value, text);
+			   String valuefromhashmap = StorageVariables.StoredVariables.get(StorageVariables.Value); //put(StorageVariables.Value, text);
+			   
+			   StorageVariables.stepLog="Expected text :" + valuefromhashmap+"<br>Actual text : " + text;
+			   
+			   if(text.contains(valuefromhashmap))
+			   {
+			   
+			   Logger.logsuccess("Expected and actual texts match");
+			   }
+			   
+			   else
+			   {
+				   Logger.logwarning("Expected and actual texts do not match");
+			   }
 			}
 			
 			else if(text.contains(StorageVariables.Value)) 
 			{
+				StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text : " + text;
 				  Logger.logsuccess("Expected and actual texts match"); 	
 			}
 			
@@ -297,7 +311,14 @@ public class PageActions
     	try
     	{
     	StorageVariables.driver.navigate().refresh();
+    	if(StorageVariables.driver.getTitle().contains("500"))
+    	{
+    		Logger.logerror("Encountered 500 error page. Stopping the testcase.");
+    	}
+    	else
+    	{
     	Logger.logsuccess("Page refresh successful");
+    	}
     	}
     	
     	catch(Exception e)
@@ -327,6 +348,7 @@ public class PageActions
 			Thread.sleep(sleepTime);
 		} catch (InterruptedException e) {
 			
+			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Sleep action failed");
 			e.printStackTrace();
 		}
 	}
