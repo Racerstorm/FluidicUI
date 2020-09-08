@@ -1,5 +1,5 @@
 # FluidicUI
-Basic framework
+Automation framework in Java
 
 
 
@@ -13,3 +13,6 @@ md AutomationOne\Screenshots
 md AutomationOne\TestData
 md AutomationOne\Reports
 exit
+
+cd %ProjectFolderPath%
+java -cp C:\Automation\Libs\*;%ProjectFolderPath%\src -Dbrowsername=Chrome -Dtestcasename=Globe_Stage_ComposeMessage org.testng.TestNG testng.xml

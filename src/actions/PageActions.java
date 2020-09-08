@@ -1,8 +1,10 @@
 package actions;
 
+import org.openqa.selenium.Dimension;
 import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -12,9 +14,13 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import io.appium.java_client.TouchAction;
+import io.appium.java_client.android.AndroidDriver;
 
 import Storage.StorageVariables;
 import logger.Logger;
@@ -86,7 +92,7 @@ public class PageActions
 			}
 			
 			else
-			{   
+			{   StorageVariables.stepLog="Expected text :" + StorageVariables.Value+"<br>Actual text : " + text;
 				Logger.logwarning("Expected and actual texts do not match");
 			}
 			
@@ -121,14 +127,18 @@ public class PageActions
 	
 	public static void waitForPageLoad() 
 	{
-		try
-		{
-			String pageLoadState = ((JavascriptExecutor)StorageVariables.driver).executeScript("if (document != undefined && document.readyState) { return document.readyState;} else { return undefined;}").toString();
-
+	   try
+		{   String pageLoadState="";
+			JavascriptExecutor js = (JavascriptExecutor) StorageVariables.driver;  
+			System.out.println("Inside the waitforpageload try block");
+			pageLoadState = js.executeScript("if (document != undefined && document.readyState) { return document.readyState;} else { return undefined;}").toString();
+			System.out.println("received page load state");
 			while(true)
 			{
+				System.out.println("inside while loop");
 				if(pageLoadState.toUpperCase().equals("COMPLETE") || pageLoadState.toUpperCase().equals("LOADED"))
 				{
+					System.out.println("inside if block");
 					//ResultLogger.log("Page Load State: "+pageLoadState,ISSTEPACTION.True,RESULT.PASS);
 					System.out.println("Page Load State: "+pageLoadState);
 
@@ -198,7 +208,8 @@ public class PageActions
 		waitForPageLoad();
 		 
 		try
-		{
+		
+		{		
 		File scrFile = ((TakesScreenshot)StorageVariables.driver).getScreenshotAs(OutputType.FILE);
 		DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); // add S if you need milliseconds
 		StorageVariables.screenshotFile=StorageVariables.screenshotPath+StorageVariables.file+"_Step "+StorageVariables.stepNumber+"_"+StorageVariables.Action + df.format(new Date()) +".png";
@@ -206,7 +217,7 @@ public class PageActions
 		}
 		
 		catch(Exception exc)
-		{Logger.logerror("Unable to capture screenshots.");}
+		{Logger.logerror("Unable to capture screenshots."+exc);}
 		
 	}
 
@@ -351,6 +362,14 @@ public class PageActions
 			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed with the exception "+e+" Sleep action failed");
 			e.printStackTrace();
 		}
+	}
+	
+	public static void swipeVertical() throws Exception 
+	{
+		JavascriptExecutor jse = (JavascriptExecutor) StorageVariables.driver;
+		jse.executeScript("scroll(0, 300)");
+        
+       
 	}
 	
 

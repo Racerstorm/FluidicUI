@@ -1,14 +1,12 @@
 package testStartup;
 import org.testng.annotations.Test;
-import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 
-import org.glassfish.jersey.internal.guava.Stopwatch;
+//import org.glassfish.jersey.internal.guava.Stopwatch;
 import org.testng.ITestResult;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.AfterTest;
@@ -26,15 +24,16 @@ import logger.Logger;
 import readTestData.ReadCSV;
 import readTestData.ReadExcel;
 
-
+ 
 @Test
 
 public class LaunchTest {
  
 	ExtentReports extent;
 	
-  @BeforeTest
+  @BeforeTest(alwaysRun = true)
 //  @Parameters("browser")
+  
   @Parameters({ "browser", "mobileautomation","datasource","filename","TCsheet"})
 
   public void Setup(String browser,boolean mobileautomation,String datasource,String filename,String TCsheet) 
@@ -43,15 +42,14 @@ public class LaunchTest {
 	  StorageVariables.testdataSource=datasource;
 	  StorageVariables.inputFile=filename;
 	  StorageVariables.testcaseSheet=TCsheet;
-	  
+	  StorageVariables.mobileAutomation=true;
 
-	  //Read test case steps from CSV file.
+	  //Read test case steps from CSV file.  
 			try
 			{
 				if(StorageVariables.testdataSource.equalsIgnoreCase("DB"))
 				{
-				StorageVariables.file="hikvision_qa_create_landingpage";
-				 StepsfromDB.readtestcasestepsfromDB();
+				  StepsfromDB.readtestcasestepsfromDB();
 				}
 				
 				else if(StorageVariables.testdataSource.equalsIgnoreCase("csv"))
@@ -62,9 +60,10 @@ public class LaunchTest {
 				
 				else if(StorageVariables.testdataSource.equalsIgnoreCase("excel"))
 				{
+					
 					readTestData.ReadExcel objExcelFile = new ReadExcel();
-					//String filePath = "C:/Automation/TestData";
-
+					//String filePath = "C:/Automation/TestData";c
+					 System.out.println("Entering the excel file");
 
 				    //Call read file method of the class to read data
 				    objExcelFile.readExcel(StorageVariables.testdataPath,StorageVariables.inputFile,StorageVariables.testcaseSheet);
@@ -88,21 +87,30 @@ public class LaunchTest {
 			LaunchBrowser.LaunchBrowser();	
 			
 			DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss"); 
-			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+StorageVariables.testcaseSheet+" TestReport" +df.format(new Date())+".html",false);
+			StorageVariables.report = new ExtentReports(StorageVariables.htmlreportPath+StorageVariables.inputFile+" TestReport" +df.format(new Date())+".html",false);
 //			StorageVariables.file = StorageVariables.file.substring(0, StorageVariables.file.lastIndexOf('.'));
+			if(!StorageVariables.testdataSource.equalsIgnoreCase("excel"))
+			{
+				StorageVariables.test = StorageVariables.report.startTest(StorageVariables.inputFile);	
+			}
+			else
+			{
 			StorageVariables.test = StorageVariables.report.startTest(StorageVariables.testcaseSheet);
+			}
 			StorageVariables.warningCounter=0;
   }
 
-  @Test //(invocationCount = 5)
+  @Test(alwaysRun = true) //(invocationCount = 5)
   public  void Start()
   {
 	  
-	  Logger.logmessage("----------Starting Test---------"+"<br> Browser : "+StorageVariables.browser+"<br> Testcase : "+StorageVariables.file);
+	  Logger.logmessage("----------Starting Test(s)_---------"+"<br> Browser : "+StorageVariables.browser+"<br> Testcase : "+StorageVariables.inputFile);
+	  
 	  for(int counter= 0;counter<StorageVariables.actions.size();counter++)
       {
+		  System.out.println("Inside the loop"); 
 		StorageVariables.stepNumber=counter+1;
-      	StorageVariables.Action = StorageVariables.actions.get(counter);
+      	StorageVariables.Action = StorageVariables.actions.get(counter).trim();
       	StorageVariables.Target = StorageVariables.targets.get(counter);
       	StorageVariables.Value = StorageVariables.values.get(counter);
       //  Logger.logmessage("Executing Step "+StorageVariables.stepNumber+ ": "+StorageVariables.Action+"");

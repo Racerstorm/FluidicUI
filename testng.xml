@@ -1,17 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
-<suite name="Suite" parallel="methods" thread-count="2">
-  <test  name="testOne">
-   <parameter name = "browser" value="Chrome"/>
+<suite name="Suite" configfailurepolicy="continue">
+<test  name="testThree">
+   <parameter name = "browser" value="chrome"/>
    <parameter name = "mobileautomation" value="false"/>
-   <parameter name = "datasource" value="excel"/>  
-    <parameter name = "filename" value="Testcases.xlsx"/>
-    <parameter name = "TCsheet" value="Globe_Stage_ProfilePage"/>
+   <parameter name = "datasource" value="csv"/>  
+    <parameter name = "filename" value="Globe_Prod_Login"/>
+    <parameter name = "TCsheet" value="Adobe_Stage_StartConversation"/>
     <classes>
       <class name="testStartup.LaunchTest"/>
       </classes>
 
+
+
+
   </test> <!-- Test -->
   
        
-</suite> <!-- Suite -->
+</suite> <!-- Suite -->	
+

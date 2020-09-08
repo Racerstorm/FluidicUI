@@ -16,17 +16,19 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+
 import Storage.StorageVariables;
 
 public class ReadExcel 
 {
-
+ 
 	public String cellval="";
 	String type="";
 	int cell_row,cell_column;
 	
     public void readExcel(String filePath,String fileName,String sheetName) throws IOException{
 
+    	 System.out.println("Inside excel file");
     //Create an object of File class to open xlsx file
     try
     {

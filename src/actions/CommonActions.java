@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.remote.server.handler.ClickElement;
@@ -21,7 +22,9 @@ import java.awt.event.KeyEvent;
 
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
-import org.openqa.selenium.support.ui.WebDriverWait;  
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import com.beust.jcommander.JCommander.Builder;  
 
 public class CommonActions
 {
@@ -30,14 +33,18 @@ public class CommonActions
 	{
 		try
 		{
+//			StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
+//			//	DesiredCapabilities capability=DesiredCapabilities.chrome();
+//			System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
+//			StorageVariables.driver = new ChromeDriver();
 			StorageVariables.stepLog="Launching the URL : "+StorageVariables.Value;
 			StorageVariables.driver.navigate().to(StorageVariables.Value);
 			if(StorageVariables.driver.getTitle().startsWith("500"))
 			{
 			Logger.logerror("Step "+StorageVariables.stepNumber+ " : "+StorageVariables.Action+" failed as the URL could not be opened.");
-
-			}
 			
+			}
+	        StorageVariables.stepLog+="<br>Page Title : "+StorageVariables.driver.getTitle();
 			Logger.logsuccess("Open action was performed successfully.");
 			PageActions.waitForPageLoad();
 		}
@@ -72,9 +79,18 @@ public class CommonActions
      {   
     	 try
     	 {
+    		 if(StorageVariables.mobileAutomation)
+    		 {
+    			 StorageVariables.element=StorageVariables.driver.findElement(StorageVariables.by);
+    			 Actions builder = new Actions(StorageVariables.driver);
+    			 Action mobileClick = builder.click(StorageVariables.element).build();
+    			 mobileClick.perform();
+    		 }
+    		 else
+    		 {
     		 StorageVariables.element=StorageVariables.driver.findElement(StorageVariables.by);
     		 ((JavascriptExecutor)StorageVariables.driver).executeScript("arguments[0].click();", StorageVariables.element);
-    		 
+    		 }
     	 }
     	 
     	 catch(Exception Ee) 
@@ -297,6 +313,24 @@ public class CommonActions
 		}
 	}
 	
+	public static void typeandEnter()
+	{
+		try
+		{
+			LaunchBrowser.splitTarget(StorageVariables.Target);
+			WebDriverWait driverwait = new WebDriverWait(StorageVariables.driver, 10);
+			driverwait.until(ExpectedConditions.presenceOfElementLocated(StorageVariables.by));
+			//Thread.sleep(1000);
+		    StorageVariables.driver.findElement(StorageVariables.by).clear();
+			WebElement key=StorageVariables.driver.findElement(StorageVariables.by);
+		    key.sendKeys(StorageVariables.Value);
+		    key.sendKeys(Keys.RETURN);
+		    Thread.sleep(1000);
+			//
+		}
+		catch(Exception e)
+		{}
+	}
 	
 	public static void Select()
 	{
