@@ -14,10 +14,7 @@
       </resource>
     </resources>
     
-    <properties>
-    <selenium.version>3.141.59</selenium.version>
-    <testng.version>6.9.10</testng.version> 
-    </properties>
+    
     
     <plugins>
       <plugin>
@@ -133,6 +130,12 @@
     <groupId>com.google.guava</groupId>
     <artifactId>guava</artifactId>
     <version>25.0-jre</version>
+</dependency>
+
+<dependency>
+    <groupId>io.github.bonigarcia</groupId>
+    <artifactId>webdrivermanager</artifactId>
+    <version>4.4.3</version>
 </dependency>
 
 

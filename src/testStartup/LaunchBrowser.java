@@ -10,6 +10,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.safari.SafariDriver;
 //import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeTest;
@@ -21,6 +22,7 @@ import actions.CustomActions;
 import actions.PageActions;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.remote.MobileCapabilityType;
+import io.github.bonigarcia.wdm.WebDriverManager;
  
 
 public class LaunchBrowser {
@@ -37,9 +39,10 @@ public static void LaunchBrowser()
 	   {
 	   if(StorageVariables.browser.equalsIgnoreCase("Chrome"))
 		{
-			StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
+			//StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\chromedriver.exe";
 		//	DesiredCapabilities capability=DesiredCapabilities.chrome();
-			System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath);
+			//System.setProperty("webdriver.chrome.driver", StorageVariables.driverPath+"chromedriver");
+			WebDriverManager.chromedriver().setup();
 			ChromeOptions options = new ChromeOptions();
 			
 			//Launch Canary
@@ -67,8 +70,9 @@ public static void LaunchBrowser()
 		
 		else if(StorageVariables.browser.equalsIgnoreCase("Firefox"))
 		{
-			StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\geckodriver.exe";
-			System.setProperty("webdriver.gecko.driver", StorageVariables.driverPath);
+			WebDriverManager.firefoxdriver().setup();
+			//StorageVariables.driverPath = "C:\\Automation\\WebDrivers\\geckodriver.exe";
+			//System.setProperty("webdriver.gecko.driver", StorageVariables.driverPath);
 			StorageVariables.driver=new FirefoxDriver();
 			StorageVariables.driver.manage().window().maximize();
 		}
@@ -89,8 +93,15 @@ public static void LaunchBrowser()
 		
 		else if(StorageVariables.browser.equalsIgnoreCase("Edge"))
 		{
-			System.setProperty("webdriver.edge.driver","C:\\Automation\\WebDrivers\\MicrosoftWebDriver.exe");
+			WebDriverManager.edgedriver().setup();
+			//System.setProperty("webdriver.edge.driver","C:\\Automation\\WebDrivers\\MicrosoftWebDriver.exe");
 			StorageVariables.driver= new EdgeDriver();
+			StorageVariables.driver.manage().window().maximize();
+		}
+	   
+		else if(StorageVariables.browser.equalsIgnoreCase("Safari"))
+		{
+			StorageVariables.driver = new SafariDriver();
 			StorageVariables.driver.manage().window().maximize();
 		}
 	}
@@ -99,8 +110,8 @@ public static void LaunchBrowser()
 		// Create an object for Desired Capabilities
 /*			DesiredCapabilities capabilities = new DesiredCapabilities();
 
-			// Name of mobile web browser to automate. ‘Safari’ for iOS and ‘Chrome’
-			// or ‘Browser’ for Android
+			// Name of mobile web browser to automate. ï¿½Safariï¿½ for iOS and ï¿½Chromeï¿½
+			// or ï¿½Browserï¿½ for Android
 			capabilities.setCapability("browserName", StorageVariables.browser);
 
 			// The kind of mobile device or emulator to use - iPad Simulator, iPhone

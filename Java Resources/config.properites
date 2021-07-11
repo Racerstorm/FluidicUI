@@ -1,0 +1,9 @@
+screenshotsPath=/Users/macbook/Documents/Automation/Screenshots/
+chromedriverpath=/Users/macbook/Documents/Automation/Webdrivers/
+chromedriverpath=/Users/macbook/Documents/Automation/Webdrivers/
+reportPath=/Users/macbook/Documents/Automation/Reports/
+testdataPath=/Users/macbook/Documents/Automation/TestData/
+
+PAGE_LOAD_TIMEOUT = 20
+SleepDuration = 3000
+WelcomeMessage_Homepage = Hey there, Shockwave!

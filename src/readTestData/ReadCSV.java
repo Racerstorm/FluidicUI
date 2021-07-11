@@ -13,8 +13,10 @@ public class ReadCSV {
 		
 	 // StorageVariables.csvLocation="C:\\Automation\\TestData\\Test.csv"; 
 	  StorageVariables.delimiter='|';
+	  String path="/Users/macbook/Documents/Automation/TestData/";
 	  
-	  File folder = new File("/C:/Automation/TestData/");
+	  File folder = new File(path);
+	  
 	  File[] listOfFiles = folder.listFiles();
 
 	  for (File file : listOfFiles) {
@@ -24,7 +26,16 @@ public class ReadCSV {
 	          	if(tempfile.equalsIgnoreCase(StorageVariables.inputFile))
 	          	{
 	          		StorageVariables.file=tempfile;
+	          		if(StorageVariables.OS=="Windows")
+	          		{
 	          		StorageVariables.csvLocation=folder+"\\"+tempfile;
+	          		}
+	          		
+	          		if(StorageVariables.OS.equalsIgnoreCase("MAC"))
+	          		{
+	          			StorageVariables.csvLocation=folder+"/"+tempfile;	
+	          		}
+	          		
 	          		if (tempfile.indexOf(".") > 0)
 	          			tempfile = tempfile.substring(0, tempfile.lastIndexOf("."));
 	          		// return fileName;
@@ -32,15 +43,10 @@ public class ReadCSV {
 	      }
 	  }
 	 
-	  
-	 //csvLocation="D:\\eclipse-workspace\\Test.csv";
-	
 	
 	  
         try
-       /* (FileInputStream fis = new FileInputStream(csvLocation);
-            InputStreamReader isr = new InputStreamReader(fis,StandardCharsets.UTF_8);
-            CSVReader reader = new CSVReader(isr)) */
+       
         {
         	//CSVReader reader = new CSVReader(new FileReader(StorageVariables.csvLocation),StorageVariables.delimiter);
         	CSVReader reader = new CSVReader(new FileReader(StorageVariables.csvLocation),StorageVariables.delimiter);

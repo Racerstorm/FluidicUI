@@ -1,6 +1,9 @@
 package testStartup;
 import org.testng.annotations.Test;
+
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,15 +37,43 @@ public class LaunchTest {
   @BeforeTest(alwaysRun = true)
 //  @Parameters("browser")
   
-  @Parameters({ "browser", "mobileautomation","datasource","filename","TCsheet"})
+  @Parameters({ "OS", "browser", "mobileautomation","datasource","filename"})
 
-  public void Setup(String browser,boolean mobileautomation,String datasource,String filename,String TCsheet) 
+  public void Setup(String OS,String browser,boolean mobileautomation,String datasource,String filename) 
   {
 	  Logger.logmessage("Reading steps from the input file");
 	  StorageVariables.testdataSource=datasource;
 	  StorageVariables.inputFile=filename;
-	  StorageVariables.testcaseSheet=TCsheet;
+	  //StorageVariables.testcaseSheet=TCsheet;
 	  StorageVariables.mobileAutomation=true;
+	  StorageVariables.OS=OS;
+	  
+	//Read file path from the properties file.
+		
+		 try  {
+
+	            StorageVariables.prop = new Properties();
+	            FileInputStream file = null;
+	            if(OS.equalsIgnoreCase("Windows"))
+	            {			             
+	             file = new FileInputStream("C:\\Users\\ust52622\\git\\POMFramework\\src\\main\\java\\com\\testwebapp\\config\\config.properties");
+	            }
+	            
+	            if(OS.equalsIgnoreCase("MAC"))
+	            {
+	              file = new FileInputStream("/Users/macbook/git/FluidicUI/Java Resources/config.properites");
+	            }
+	            	
+	             StorageVariables.prop.load(file);
+	           
+	             StorageVariables.testdataPath=StorageVariables.prop.getProperty("testdataPath");
+	             StorageVariables.driverPath=StorageVariables.prop.getProperty("webdriverPath");
+	             StorageVariables.htmlreportPath=StorageVariables.prop.getProperty("reportPath");
+	             StorageVariables.screenshotPath=StorageVariables.prop.getProperty("screenshotsPath");
+
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
 
 	  //Read test case steps from CSV file.  
 			try
@@ -76,13 +107,15 @@ public class LaunchTest {
 	        	  e.printStackTrace();
 			    }
 			
-		    Properties prop = new Properties();
+			
+			
+		    
 		    
 			StorageVariables.browser=browser;	
 			StorageVariables.mobileAutomation=mobileautomation;
-			StorageVariables.screenshotPath="C:\\Automation\\Screenshots\\";
-			StorageVariables.htmlreportPath="C:\\Automation\\Reports\\";
-		    Logger.logmessage("Browser : "+StorageVariables.browser);
+			
+				
+			Logger.logmessage("Browser : "+StorageVariables.browser);
 		 //   StorageVariables.startTime = System.nanoTime();
 			LaunchBrowser.LaunchBrowser();	
 			
@@ -162,8 +195,8 @@ public class LaunchTest {
         	StorageVariables.actions.clear();
         	StorageVariables.targets.clear();
         	StorageVariables.values.clear();
-        	StorageVariables.driver.close();
-        	StorageVariables.driver.quit();
+        //	StorageVariables.driver.close();
+        	//StorageVariables.driver.quit();
         	if(StorageVariables.browser.equalsIgnoreCase("Chrome"))
         	{
         		Runtime.getRuntime().exec("taskkill /F /IM chromedriver.exe /T");

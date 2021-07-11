@@ -1,9 +1,12 @@
 package Storage;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Properties;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -37,9 +40,10 @@ public class StorageVariables {
 	public static char delimiter;
 	public static String localVar="";
 	public static WebElement highlightedElement=null;
-	public static String testdataPath = "C:/Automation/TestData";	
+	public static String testdataPath;
 	public static String testcaseSheet="";
-		
+	public static String OS="";	
+	
 	public static WebElement element = null;
 	public static By by = null;
 	public static String tempStorage="";
@@ -68,6 +72,10 @@ public class StorageVariables {
 	public static ExtentTest logger=null;
 	public static ExtentReports report=new ExtentReports(htmlreportPath, true);
 	 public static ExtentTest test=new ExtentTest("", "");
+	 public static Properties prop;
+	 
+	 
+	 
 	 
 
 }
