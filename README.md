@@ -1,5 +1,5 @@
 # FluidicUI
-Automation framework in Java
+Hybrid test automation framework in Java
 
 
 
